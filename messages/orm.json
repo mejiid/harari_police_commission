@@ -1,0 +1,37 @@
+{
+  "nav": {
+    "home": "Mana",
+    "news": "Oduu",
+    "reports": "Gabaasa",
+    "about": "Waa'ee Keenya",
+    "contact": "Nu Quunnamaa"
+  },
+  "home": {
+    "hero_title": "Komishinii Poolisii Mana Hidhaa",
+    "hero_subtitle": "Iftoominaa, Itti Gaafatamummaa fi Haqummaa",
+    "latest_news": "Oduu Haaraa",
+    "latest_reports": "Gabaasa Haaraa",
+    "view_all": "Hunda Ilaali"
+  },
+  "news": {
+    "title": "Oduu",
+    "read_more": "Dabalata Dubbisi"
+  },
+  "reports": {
+    "title": "Gabaasa",
+    "download": "PDF Buufadhu"
+  },
+  "contact": {
+    "title": "Nu Quunnamaa",
+    "name": "Maqaa Guutuu",
+    "email": "Teessoo Imeelii",
+    "subject": "Mata Duree",
+    "message": "Ergaa",
+    "submit": "Ergaa Ergi",
+    "success": "Ergaan kee milkaa'inaan ergameera.",
+    "error": "Dogoggorri uumameera. Irra deebi'ii yaali."
+  },
+  "about": {
+    "title": "Waa'ee Komishinii"
+  }
+}

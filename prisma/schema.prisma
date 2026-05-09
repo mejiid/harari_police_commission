@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Auth (Better Auth) ───────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          Role      @default(EDITOR)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions      Session[]
+  accounts      Account[]
+  articles      Article[]
+  reports       Report[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verifications")
+}
+
+enum Role {
+  SUPER_ADMIN
+  EDITOR
+}
+
+// ─── Articles (News) ─────────────────────────────────────────────────────────
+
+model Article {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  imageUrl    String?
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  createdById String
+
+  createdBy    User                 @relation(fields: [createdById], references: [id])
+  translations ArticleTranslation[]
+
+  @@map("articles")
+}
+
+model ArticleTranslation {
+  id        String   @id @default(cuid())
+  articleId String
+  language  Language
+  title     String
+  summary   String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@unique([articleId, language])
+  @@map("article_translations")
+}
+
+// ─── Reports ─────────────────────────────────────────────────────────────────
+
+model Report {
+  id          String    @id @default(cuid())
+  fileUrl     String
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  createdById String
+
+  createdBy    User                @relation(fields: [createdById], references: [id])
+  translations ReportTranslation[]
+
+  @@map("reports")
+}
+
+model ReportTranslation {
+  id          String   @id @default(cuid())
+  reportId    String
+  language    Language
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@unique([reportId, language])
+  @@map("report_translations")
+}
+
+// ─── Static Pages ─────────────────────────────────────────────────────────────
+
+model PageContent {
+  id        String   @id @default(cuid())
+  pageKey   String
+  language  Language
+  content   String   @db.Text
+  updatedAt DateTime @updatedAt
+
+  @@unique([pageKey, language])
+  @@map("page_contents")
+}
+
+// ─── Contact Submissions ──────────────────────────────────────────────────────
+
+model ContactSubmission {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  subject     String
+  message     String   @db.Text
+  isRead      Boolean  @default(false)
+  submittedAt DateTime @default(now())
+
+  @@map("contact_submissions")
+}
+
+// ─── Shared Enums ─────────────────────────────────────────────────────────────
+
+enum Language {
+  en
+  am
+  har
+  orm
+}

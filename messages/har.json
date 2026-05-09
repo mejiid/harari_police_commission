@@ -1,0 +1,37 @@
+{
+  "nav": {
+    "home": "ቤት",
+    "news": "ዜና",
+    "reports": "ሪፖርት",
+    "about": "ስለ እኛ",
+    "contact": "ያናግሩን"
+  },
+  "home": {
+    "hero_title": "የእስር ቤት ፖሊስ ኮሚሽን",
+    "hero_subtitle": "ግልጽነት፣ ተጠያቂነት እና ፍትህ",
+    "latest_news": "አዲስ ዜናዎች",
+    "latest_reports": "አዲስ ሪፖርቶች",
+    "view_all": "ሁሉንም ይመልከቱ"
+  },
+  "news": {
+    "title": "ዜና",
+    "read_more": "ተጨማሪ"
+  },
+  "reports": {
+    "title": "ሪፖርት",
+    "download": "PDF አውርድ"
+  },
+  "contact": {
+    "title": "ያናግሩን",
+    "name": "ሙሉ ስም",
+    "email": "ኢሜይል",
+    "subject": "ርዕስ",
+    "message": "መልዕክት",
+    "submit": "ላክ",
+    "success": "መልዕክትዎ ተልኳል።",
+    "error": "ስህተት ተፈጥሯል። እንደገና ይሞክሩ።"
+  },
+  "about": {
+    "title": "ስለ ኮሚሽኑ"
+  }
+}

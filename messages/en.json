@@ -1,0 +1,37 @@
+{
+  "nav": {
+    "home": "Home",
+    "news": "News",
+    "reports": "Reports",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "home": {
+    "hero_title": "Prison Police Commission",
+    "hero_subtitle": "Transparency, Accountability, and Justice",
+    "latest_news": "Latest News",
+    "latest_reports": "Latest Reports",
+    "view_all": "View All"
+  },
+  "news": {
+    "title": "News",
+    "read_more": "Read More"
+  },
+  "reports": {
+    "title": "Reports",
+    "download": "Download PDF"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "name": "Full Name",
+    "email": "Email Address",
+    "subject": "Subject",
+    "message": "Message",
+    "submit": "Send Message",
+    "success": "Your message has been sent successfully.",
+    "error": "Something went wrong. Please try again."
+  },
+  "about": {
+    "title": "About the Commission"
+  }
+}
