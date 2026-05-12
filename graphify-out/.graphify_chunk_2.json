@@ -1,0 +1,209 @@
+{
+  "nodes": [
+    {
+      "id": "admin_pages_mgmt",
+      "label": "Admin Static Page Management",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/pages/page.tsx"
+    },
+    {
+      "id": "admin_reports_page",
+      "label": "Admin Reports Management",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/reports/page.tsx"
+    },
+    {
+      "id": "admin_new_report_page",
+      "label": "Admin New Report Page",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/reports/new/page.tsx"
+    },
+    {
+      "id": "admin_edit_report_page",
+      "label": "Admin Edit Report Page",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/reports/[id]/page.tsx"
+    },
+    {
+      "id": "admin_users_page",
+      "label": "Admin Users Management",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/users/page.tsx"
+    },
+    {
+      "id": "admin_new_user_page",
+      "label": "Admin New User Creation",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/users/new/page.tsx"
+    },
+    {
+      "id": "api_admin_articles",
+      "label": "API: Admin Articles CRUD",
+      "file_type": "code",
+      "source_file": "app/api/admin/articles/route.ts"
+    },
+    {
+      "id": "api_admin_article_by_id",
+      "label": "API: Admin Article Entity",
+      "file_type": "code",
+      "source_file": "app/api/admin/articles/[id]/route.ts"
+    },
+    {
+      "id": "api_admin_contact_read",
+      "label": "API: Contact Message Status",
+      "file_type": "code",
+      "source_file": "app/api/admin/contact/[id]/read/route.ts"
+    },
+    {
+      "id": "api_admin_pages",
+      "label": "API: Static Content Upsert",
+      "file_type": "code",
+      "source_file": "app/api/admin/pages/route.ts"
+    },
+    {
+      "id": "api_admin_reports",
+      "label": "API: Admin Reports CRUD",
+      "file_type": "code",
+      "source_file": "app/api/admin/reports/route.ts"
+    },
+    {
+      "id": "api_admin_report_by_id",
+      "label": "API: Admin Report Entity",
+      "file_type": "code",
+      "source_file": "app/api/admin/reports/[id]/route.ts"
+    },
+    {
+      "id": "api_admin_upload",
+      "label": "API: institutional PDF Upload",
+      "file_type": "code",
+      "source_file": "app/api/admin/upload/route.ts"
+    },
+    {
+      "id": "api_admin_users",
+      "label": "API: Admin User Management",
+      "file_type": "code",
+      "source_file": "app/api/admin/users/route.ts"
+    },
+    {
+      "id": "api_admin_user_by_id",
+      "label": "API: Admin User Entity",
+      "file_type": "code",
+      "source_file": "app/api/admin/users/[id]/route.ts"
+    },
+    {
+      "id": "api_auth_handler",
+      "label": "API: Auth Provider Handler",
+      "file_type": "code",
+      "source_file": "app/api/auth/[...all]/route.ts"
+    },
+    {
+      "id": "api_contact_form",
+      "label": "API: Public Inquiry Submission",
+      "file_type": "code",
+      "source_file": "app/api/contact/route.ts"
+    },
+    {
+      "id": "public_error",
+      "label": "Public Error Boundary",
+      "file_type": "code",
+      "source_file": "app/[locale]/error.tsx"
+    },
+    {
+      "id": "public_locale_layout",
+      "label": "Public Multi-locale Layout",
+      "file_type": "code",
+      "source_file": "app/[locale]/layout.tsx"
+    },
+    {
+      "id": "public_not_found",
+      "label": "Public Not Found Page",
+      "file_type": "code",
+      "source_file": "app/[locale]/not-found.tsx"
+    }
+  ],
+  "edges": [
+    {
+      "source": "admin_pages_mgmt",
+      "target": "PageEditor",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/pages/page.tsx"
+    },
+    {
+      "source": "admin_reports_page",
+      "target": "db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/reports/page.tsx"
+    },
+    {
+      "source": "admin_new_report_page",
+      "target": "ReportForm",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/reports/new/page.tsx"
+    },
+    {
+      "source": "admin_edit_report_page",
+      "target": "db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/reports/[id]/page.tsx"
+    },
+    {
+      "source": "admin_users_page",
+      "target": "db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/users/page.tsx"
+    },
+    {
+      "source": "api_admin_articles",
+      "target": "db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/api/admin/articles/route.ts"
+    },
+    {
+      "source": "api_admin_upload",
+      "target": "vercel_blob",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/api/admin/upload/route.ts"
+    },
+    {
+      "source": "api_contact_form",
+      "target": "resend",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/api/contact/route.ts"
+    },
+    {
+      "source": "api_contact_form",
+      "target": "db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/api/contact/route.ts"
+    },
+    {
+      "source": "public_locale_layout",
+      "target": "next_intl",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/[locale]/layout.tsx"
+    }
+  ],
+  "hyperedges": [],
+  "input_tokens": 1500,
+  "output_tokens": 800
+}

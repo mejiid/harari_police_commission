@@ -3,17 +3,30 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "@/lib/auth-client";
+import { 
+  LayoutDashboard, 
+  FileText, 
+  Files, 
+  Inbox, 
+  FileCode, 
+  Users, 
+  LogOut,
+  ShieldCheck
+} from "lucide-react";
 
 const navItems = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: "⊞" },
-  { href: "/admin/articles", label: "Articles", icon: "📰" },
-  { href: "/admin/reports", label: "Reports", icon: "📄" },
-  { href: "/admin/contact", label: "Contact Inbox", icon: "✉️" },
-  { href: "/admin/pages", label: "Pages", icon: "📝" },
-  { href: "/admin/users", label: "Users", icon: "👥" },
+  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/articles", label: "Articles", icon: FileText },
+  { href: "/admin/reports", label: "Reports", icon: Files },
+  { href: "/admin/contact", label: "Inquiries", icon: Inbox },
+  { href: "/admin/pages", label: "Site Pages", icon: FileCode },
+  { href: "/admin/users", label: "System Users", icon: Users },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ mobileOpen, setMobileOpen }: { 
+  mobileOpen?: boolean; 
+  setMobileOpen?: (open: boolean) => void 
+}) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -23,48 +36,53 @@ export default function AdminSidebar() {
   }
 
   return (
-    <aside className="w-60 bg-primary text-white flex flex-col min-h-screen shrink-0">
+    <aside className={`
+      fixed inset-y-0 left-0 z-50 w-64 bg-primary text-white flex flex-col transform transition-transform duration-300 lg:relative lg:translate-x-0
+      ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
+    `}>
       {/* Brand */}
-      <div className="px-6 py-5 border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center text-primary font-bold text-xs">
-            PPC
+      <div className="px-6 py-8 border-b border-white/5">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-accent flex items-center justify-center text-white shadow-xl shadow-accent/20">
+             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
-            <p className="font-semibold text-sm">Admin Panel</p>
-            <p className="text-xs text-white/60">Prison Police Commission</p>
+            <p className="font-display font-bold text-sm tracking-tight leading-none">ADMIN PORTAL</p>
+            <p className="text-[10px] uppercase tracking-widest text-white/40 mt-1">Harari Prison Commission</p>
           </div>
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
         {navItems.map((item) => {
           const active = pathname.startsWith(item.href);
+          const Icon = item.icon;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded text-sm transition-colors ${
+              onClick={() => setMobileOpen?.(false)}
+              className={`flex items-center gap-4 px-4 py-3 text-[10px] font-bold uppercase tracking-widest transition-all group ${
                 active
-                  ? "bg-white/15 text-white font-medium"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
+                  ? "bg-accent text-white shadow-lg shadow-accent/10"
+                  : "text-white/50 hover:text-white hover:bg-white/5"
               }`}
             >
-              <span>{item.icon}</span>
+              <Icon className={`w-4 h-4 transition-transform ${active ? "scale-110" : "group-hover:scale-110"}`} />
               {item.label}
             </Link>
           );
         })}
       </nav>
 
-      {/* Sign out */}
-      <div className="px-3 py-4 border-t border-white/10">
+      {/* Footer / Sign out */}
+      <div className="px-4 py-6 border-t border-white/5">
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-3 px-3 py-2.5 rounded text-sm text-white/70 hover:bg-white/10 hover:text-white transition-colors w-full"
+          className="flex items-center gap-4 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-accent hover:bg-accent/5 transition-all w-full text-left"
         >
-          <span>🚪</span>
+          <LogOut className="w-4 h-4" />
           Sign Out
         </button>
       </div>

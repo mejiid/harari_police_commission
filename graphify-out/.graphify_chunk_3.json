@@ -1,0 +1,173 @@
+{
+  "nodes": [
+    {
+      "id": "public_home",
+      "label": "Public Homepage",
+      "file_type": "code",
+      "source_file": "app/[locale]/page.tsx"
+    },
+    {
+      "id": "public_about",
+      "label": "Public About Page",
+      "file_type": "code",
+      "source_file": "app/[locale]/about/page.tsx"
+    },
+    {
+      "id": "public_contact",
+      "label": "Public Contact Page",
+      "file_type": "code",
+      "source_file": "app/[locale]/contact/page.tsx"
+    },
+    {
+      "id": "public_news",
+      "label": "Public News List",
+      "file_type": "code",
+      "source_file": "app/[locale]/news/page.tsx"
+    },
+    {
+      "id": "public_news_detail",
+      "label": "Public News Detail Page",
+      "file_type": "code",
+      "source_file": "app/[locale]/news/[slug]/page.tsx"
+    },
+    {
+      "id": "public_reports",
+      "label": "Public Reports List",
+      "file_type": "code",
+      "source_file": "app/[locale]/reports/page.tsx"
+    },
+    {
+      "id": "AdminSidebar",
+      "label": "Admin Navigation Sidebar",
+      "file_type": "code",
+      "source_file": "components/admin/AdminSidebar.tsx"
+    },
+    {
+      "id": "ArticleForm",
+      "label": "Admin Article Editorial Form",
+      "file_type": "code",
+      "source_file": "components/admin/ArticleForm.tsx"
+    },
+    {
+      "id": "MarkReadButton",
+      "label": "Admin Mark Read Utility",
+      "file_type": "code",
+      "source_file": "components/admin/MarkReadButton.tsx"
+    },
+    {
+      "id": "PageEditor",
+      "label": "Admin Content Editor",
+      "file_type": "code",
+      "source_file": "components/admin/PageEditor.tsx"
+    },
+    {
+      "id": "ReportForm",
+      "label": "Admin Report Upload Form",
+      "file_type": "code",
+      "source_file": "components/admin/ReportForm.tsx"
+    },
+    {
+      "id": "RichTextEditor",
+      "label": "Admin Rich Text Editor",
+      "file_type": "code",
+      "source_file": "components/admin/RichTextEditor.tsx"
+    },
+    {
+      "id": "UserActions",
+      "label": "Admin User Management Utility",
+      "file_type": "code",
+      "source_file": "components/admin/UserActions.tsx"
+    },
+    {
+      "id": "ContactForm",
+      "label": "Public Inquiry Form",
+      "file_type": "code",
+      "source_file": "components/public/ContactForm.tsx"
+    },
+    {
+      "id": "Footer",
+      "label": "Public Website Footer",
+      "file_type": "code",
+      "source_file": "components/public/Footer.tsx"
+    },
+    {
+      "id": "Header",
+      "label": "Public Website Header",
+      "file_type": "code",
+      "source_file": "components/public/Header.tsx"
+    },
+    {
+      "id": "i18n_request",
+      "label": "i18n Request Config",
+      "file_type": "code",
+      "source_file": "i18n/request.ts"
+    },
+    {
+      "id": "i18n_routing",
+      "label": "i18n Routing Setup",
+      "file_type": "code",
+      "source_file": "i18n/routing.ts"
+    }
+  ],
+  "edges": [
+    {
+      "source": "public_home",
+      "target": "db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/[locale]/page.tsx"
+    },
+    {
+      "source": "public_home",
+      "target": "Header",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/[locale]/page.tsx"
+    },
+    {
+      "source": "public_home",
+      "target": "Footer",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/[locale]/page.tsx"
+    },
+    {
+      "source": "ArticleForm",
+      "target": "RichTextEditor",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/admin/ArticleForm.tsx"
+    },
+    {
+      "source": "ContactForm",
+      "target": "api_contact_form",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/public/ContactForm.tsx"
+    },
+    {
+      "source": "Header",
+      "target": "i18n_routing",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/public/Header.tsx"
+    },
+    {
+      "source": "i18n_request",
+      "target": "i18n_routing",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "i18n/request.ts"
+    }
+  ],
+  "hyperedges": [],
+  "input_tokens": 1500,
+  "output_tokens": 800
+}

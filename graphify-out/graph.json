@@ -1,0 +1,843 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "ESLint Configuration",
+      "file_type": "code",
+      "source_file": "eslint.config.mjs",
+      "id": "eslint_config",
+      "community": 9,
+      "norm_label": "eslint configuration"
+    },
+    {
+      "label": "Next.js Configuration",
+      "file_type": "code",
+      "source_file": "next.config.ts",
+      "id": "next_config",
+      "community": 10,
+      "norm_label": "next.js configuration"
+    },
+    {
+      "label": "Prisma Configuration",
+      "file_type": "code",
+      "source_file": "prisma.config.ts",
+      "id": "prisma_config",
+      "community": 11,
+      "norm_label": "prisma configuration"
+    },
+    {
+      "label": "Auth & i18n Proxy Middleware",
+      "file_type": "code",
+      "source_file": "proxy.ts",
+      "id": "proxy",
+      "community": 12,
+      "norm_label": "auth & i18n proxy middleware"
+    },
+    {
+      "label": "Root Layout",
+      "file_type": "code",
+      "source_file": "app/layout.tsx",
+      "id": "root_layout",
+      "community": 13,
+      "norm_label": "root layout"
+    },
+    {
+      "label": "Home Page",
+      "file_type": "code",
+      "source_file": "app/page.tsx",
+      "id": "home_page",
+      "community": 14,
+      "norm_label": "home page"
+    },
+    {
+      "label": "Robots.txt Configuration",
+      "file_type": "code",
+      "source_file": "app/robots.ts",
+      "id": "robots",
+      "community": 15,
+      "norm_label": "robots.txt configuration"
+    },
+    {
+      "label": "Sitemap Generator",
+      "file_type": "code",
+      "source_file": "app/sitemap.ts",
+      "id": "sitemap",
+      "community": 0,
+      "norm_label": "sitemap generator"
+    },
+    {
+      "label": "Admin Login Page",
+      "file_type": "code",
+      "source_file": "app/admin/(auth)/login/page.tsx",
+      "id": "admin_login_page",
+      "community": 7,
+      "norm_label": "admin login page"
+    },
+    {
+      "label": "Admin Dashboard Layout",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/layout.tsx",
+      "id": "admin_dashboard_layout",
+      "community": 8,
+      "norm_label": "admin dashboard layout"
+    },
+    {
+      "label": "Admin Articles Management",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/articles/page.tsx",
+      "id": "admin_articles_page",
+      "community": 0,
+      "norm_label": "admin articles management"
+    },
+    {
+      "label": "Admin New Article Creation",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/articles/new/page.tsx",
+      "id": "admin_new_article_page",
+      "community": 2,
+      "norm_label": "admin new article creation"
+    },
+    {
+      "label": "Admin Article Editing",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/articles/[id]/page.tsx",
+      "id": "admin_edit_article_page",
+      "community": 2,
+      "norm_label": "admin article editing"
+    },
+    {
+      "label": "Admin Contact Inquiry Inbox",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/contact/page.tsx",
+      "id": "admin_contact_inbox",
+      "community": 5,
+      "norm_label": "admin contact inquiry inbox"
+    },
+    {
+      "label": "Admin Dashboard Overview",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/dashboard/page.tsx",
+      "id": "admin_dashboard",
+      "community": 0,
+      "norm_label": "admin dashboard overview"
+    },
+    {
+      "label": "Admin Static Page Management",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/pages/page.tsx",
+      "id": "admin_pages_mgmt",
+      "community": 4,
+      "norm_label": "admin static page management"
+    },
+    {
+      "label": "Admin Reports Management",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/reports/page.tsx",
+      "id": "admin_reports_page",
+      "community": 0,
+      "norm_label": "admin reports management"
+    },
+    {
+      "label": "Admin New Report Page",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/reports/new/page.tsx",
+      "id": "admin_new_report_page",
+      "community": 6,
+      "norm_label": "admin new report page"
+    },
+    {
+      "label": "Admin Edit Report Page",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/reports/[id]/page.tsx",
+      "id": "admin_edit_report_page",
+      "community": 0,
+      "norm_label": "admin edit report page"
+    },
+    {
+      "label": "Admin Users Management",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/users/page.tsx",
+      "id": "admin_users_page",
+      "community": 0,
+      "norm_label": "admin users management"
+    },
+    {
+      "label": "Admin New User Creation",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/users/new/page.tsx",
+      "id": "admin_new_user_page",
+      "community": 16,
+      "norm_label": "admin new user creation"
+    },
+    {
+      "label": "API: Admin Articles CRUD",
+      "file_type": "code",
+      "source_file": "app/api/admin/articles/route.ts",
+      "id": "api_admin_articles",
+      "community": 0,
+      "norm_label": "api: admin articles crud"
+    },
+    {
+      "label": "API: Admin Article Entity",
+      "file_type": "code",
+      "source_file": "app/api/admin/articles/[id]/route.ts",
+      "id": "api_admin_article_by_id",
+      "community": 17,
+      "norm_label": "api: admin article entity"
+    },
+    {
+      "label": "API: Contact Message Status",
+      "file_type": "code",
+      "source_file": "app/api/admin/contact/[id]/read/route.ts",
+      "id": "api_admin_contact_read",
+      "community": 18,
+      "norm_label": "api: contact message status"
+    },
+    {
+      "label": "API: Static Content Upsert",
+      "file_type": "code",
+      "source_file": "app/api/admin/pages/route.ts",
+      "id": "api_admin_pages",
+      "community": 19,
+      "norm_label": "api: static content upsert"
+    },
+    {
+      "label": "API: Admin Reports CRUD",
+      "file_type": "code",
+      "source_file": "app/api/admin/reports/route.ts",
+      "id": "api_admin_reports",
+      "community": 20,
+      "norm_label": "api: admin reports crud"
+    },
+    {
+      "label": "API: Admin Report Entity",
+      "file_type": "code",
+      "source_file": "app/api/admin/reports/[id]/route.ts",
+      "id": "api_admin_report_by_id",
+      "community": 21,
+      "norm_label": "api: admin report entity"
+    },
+    {
+      "label": "API: institutional PDF Upload",
+      "file_type": "code",
+      "source_file": "app/api/admin/upload/route.ts",
+      "id": "api_admin_upload",
+      "community": 22,
+      "norm_label": "api: institutional pdf upload"
+    },
+    {
+      "label": "API: Admin User Management",
+      "file_type": "code",
+      "source_file": "app/api/admin/users/route.ts",
+      "id": "api_admin_users",
+      "community": 23,
+      "norm_label": "api: admin user management"
+    },
+    {
+      "label": "API: Admin User Entity",
+      "file_type": "code",
+      "source_file": "app/api/admin/users/[id]/route.ts",
+      "id": "api_admin_user_by_id",
+      "community": 24,
+      "norm_label": "api: admin user entity"
+    },
+    {
+      "label": "API: Auth Provider Handler",
+      "file_type": "code",
+      "source_file": "app/api/auth/[...all]/route.ts",
+      "id": "api_auth_handler",
+      "community": 25,
+      "norm_label": "api: auth provider handler"
+    },
+    {
+      "label": "API: Public Inquiry Submission",
+      "file_type": "code",
+      "source_file": "app/api/contact/route.ts",
+      "id": "api_contact_form",
+      "community": 3,
+      "norm_label": "api: public inquiry submission"
+    },
+    {
+      "label": "Public Error Boundary",
+      "file_type": "code",
+      "source_file": "app/[locale]/error.tsx",
+      "id": "public_error",
+      "community": 26,
+      "norm_label": "public error boundary"
+    },
+    {
+      "label": "Public Multi-locale Layout",
+      "file_type": "code",
+      "source_file": "app/[locale]/layout.tsx",
+      "id": "public_locale_layout",
+      "community": 27,
+      "norm_label": "public multi-locale layout"
+    },
+    {
+      "label": "Public Not Found Page",
+      "file_type": "code",
+      "source_file": "app/[locale]/not-found.tsx",
+      "id": "public_not_found",
+      "community": 28,
+      "norm_label": "public not found page"
+    },
+    {
+      "label": "Public Homepage",
+      "file_type": "code",
+      "source_file": "app/[locale]/page.tsx",
+      "id": "public_home",
+      "community": 1,
+      "norm_label": "public homepage"
+    },
+    {
+      "label": "Public About Page",
+      "file_type": "code",
+      "source_file": "app/[locale]/about/page.tsx",
+      "id": "public_about",
+      "community": 29,
+      "norm_label": "public about page"
+    },
+    {
+      "label": "Public Contact Page",
+      "file_type": "code",
+      "source_file": "app/[locale]/contact/page.tsx",
+      "id": "public_contact",
+      "community": 30,
+      "norm_label": "public contact page"
+    },
+    {
+      "label": "Public News List",
+      "file_type": "code",
+      "source_file": "app/[locale]/news/page.tsx",
+      "id": "public_news",
+      "community": 31,
+      "norm_label": "public news list"
+    },
+    {
+      "label": "Public News Detail Page",
+      "file_type": "code",
+      "source_file": "app/[locale]/news/[slug]/page.tsx",
+      "id": "public_news_detail",
+      "community": 32,
+      "norm_label": "public news detail page"
+    },
+    {
+      "label": "Public Reports List",
+      "file_type": "code",
+      "source_file": "app/[locale]/reports/page.tsx",
+      "id": "public_reports",
+      "community": 33,
+      "norm_label": "public reports list"
+    },
+    {
+      "label": "Admin Navigation Sidebar",
+      "file_type": "code",
+      "source_file": "components/admin/AdminSidebar.tsx",
+      "id": "AdminSidebar",
+      "community": 8,
+      "norm_label": "admin navigation sidebar"
+    },
+    {
+      "label": "Admin Article Editorial Form",
+      "file_type": "code",
+      "source_file": "components/admin/ArticleForm.tsx",
+      "id": "ArticleForm",
+      "community": 2,
+      "norm_label": "admin article editorial form"
+    },
+    {
+      "label": "Admin Mark Read Utility",
+      "file_type": "code",
+      "source_file": "components/admin/MarkReadButton.tsx",
+      "id": "MarkReadButton",
+      "community": 5,
+      "norm_label": "admin mark read utility"
+    },
+    {
+      "label": "Admin Content Editor",
+      "file_type": "code",
+      "source_file": "components/admin/PageEditor.tsx",
+      "id": "PageEditor",
+      "community": 4,
+      "norm_label": "admin content editor"
+    },
+    {
+      "label": "Admin Report Upload Form",
+      "file_type": "code",
+      "source_file": "components/admin/ReportForm.tsx",
+      "id": "ReportForm",
+      "community": 6,
+      "norm_label": "admin report upload form"
+    },
+    {
+      "label": "Admin Rich Text Editor",
+      "file_type": "code",
+      "source_file": "components/admin/RichTextEditor.tsx",
+      "id": "RichTextEditor",
+      "community": 2,
+      "norm_label": "admin rich text editor"
+    },
+    {
+      "label": "Admin User Management Utility",
+      "file_type": "code",
+      "source_file": "components/admin/UserActions.tsx",
+      "id": "UserActions",
+      "community": 34,
+      "norm_label": "admin user management utility"
+    },
+    {
+      "label": "Public Inquiry Form",
+      "file_type": "code",
+      "source_file": "components/public/ContactForm.tsx",
+      "id": "ContactForm",
+      "community": 3,
+      "norm_label": "public inquiry form"
+    },
+    {
+      "label": "Public Website Footer",
+      "file_type": "code",
+      "source_file": "components/public/Footer.tsx",
+      "id": "Footer",
+      "community": 1,
+      "norm_label": "public website footer"
+    },
+    {
+      "label": "Public Website Header",
+      "file_type": "code",
+      "source_file": "components/public/Header.tsx",
+      "id": "Header",
+      "community": 1,
+      "norm_label": "public website header"
+    },
+    {
+      "label": "i18n Request Config",
+      "file_type": "code",
+      "source_file": "i18n/request.ts",
+      "id": "i18n_request",
+      "community": 1,
+      "norm_label": "i18n request config"
+    },
+    {
+      "label": "i18n Routing Setup",
+      "file_type": "code",
+      "source_file": "i18n/routing.ts",
+      "id": "i18n_routing",
+      "community": 1,
+      "norm_label": "i18n routing setup"
+    },
+    {
+      "label": "Better Auth React Client",
+      "file_type": "code",
+      "source_file": "lib/auth-client.ts",
+      "id": "auth_client",
+      "community": 7,
+      "norm_label": "better auth react client"
+    },
+    {
+      "label": "Better Auth Server Config",
+      "file_type": "code",
+      "source_file": "lib/auth.ts",
+      "id": "auth",
+      "community": 0,
+      "norm_label": "better auth server config"
+    },
+    {
+      "label": "Prisma DB Client",
+      "file_type": "code",
+      "source_file": "lib/db.ts",
+      "id": "db",
+      "community": 0,
+      "norm_label": "prisma db client"
+    },
+    {
+      "label": "ImageKit Node.js Client",
+      "file_type": "code",
+      "source_file": "lib/imagekit.ts",
+      "id": "imagekit",
+      "community": 35,
+      "norm_label": "imagekit node.js client"
+    },
+    {
+      "label": "In-Memory Rate Limiter",
+      "file_type": "code",
+      "source_file": "lib/rate-limit.ts",
+      "id": "rate_limit",
+      "community": 36,
+      "norm_label": "in-memory rate limiter"
+    },
+    {
+      "label": "Resend Email Client",
+      "file_type": "code",
+      "source_file": "lib/resend.ts",
+      "id": "resend",
+      "community": 3,
+      "norm_label": "resend email client"
+    },
+    {
+      "label": "Input Sanitization Utils",
+      "file_type": "code",
+      "source_file": "lib/sanitize.ts",
+      "id": "sanitize",
+      "community": 37,
+      "norm_label": "input sanitization utils"
+    },
+    {
+      "label": "General Utilities",
+      "file_type": "code",
+      "source_file": "lib/utils.ts",
+      "id": "utils",
+      "community": 38,
+      "norm_label": "general utilities"
+    },
+    {
+      "label": "Database Seeding Script",
+      "file_type": "code",
+      "source_file": "prisma/seed.ts",
+      "id": "seed",
+      "community": 0,
+      "norm_label": "database seeding script"
+    },
+    {
+      "label": "Agent Rules",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "id": "AGENTS_md",
+      "community": 39,
+      "norm_label": "agent rules"
+    },
+    {
+      "label": "Claude Instructions",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "id": "CLAUDE_md",
+      "community": 40,
+      "norm_label": "claude instructions"
+    },
+    {
+      "label": "Project README",
+      "file_type": "document",
+      "source_file": "README.md",
+      "id": "README_md",
+      "community": 41,
+      "norm_label": "project readme"
+    },
+    {
+      "label": "API Design Doc",
+      "file_type": "document",
+      "source_file": "context/api.md",
+      "id": "context_api",
+      "community": 42,
+      "norm_label": "api design doc"
+    },
+    {
+      "label": "Architecture Doc",
+      "file_type": "document",
+      "source_file": "context/architecture.md",
+      "id": "context_arch",
+      "community": 0,
+      "norm_label": "architecture doc"
+    },
+    {
+      "label": "Database Design Doc",
+      "file_type": "document",
+      "source_file": "context/database.md",
+      "id": "context_db",
+      "community": 43,
+      "norm_label": "database design doc"
+    },
+    {
+      "label": "Architecture Decision Records",
+      "file_type": "document",
+      "source_file": "context/decisioins.md",
+      "id": "context_decisions",
+      "community": 44,
+      "norm_label": "architecture decision records"
+    },
+    {
+      "label": "Design System Doc",
+      "file_type": "document",
+      "source_file": "context/design.md",
+      "id": "context_design",
+      "community": 45,
+      "norm_label": "design system doc"
+    },
+    {
+      "label": "Feature Requirements Doc",
+      "file_type": "document",
+      "source_file": "context/features.md",
+      "id": "context_features",
+      "community": 46,
+      "norm_label": "feature requirements doc"
+    },
+    {
+      "label": "Project Roadmap Doc",
+      "file_type": "document",
+      "source_file": "context/roadmap.md",
+      "id": "context_roadmap",
+      "community": 47,
+      "norm_label": "project roadmap doc"
+    },
+    {
+      "label": "Task List Doc",
+      "file_type": "document",
+      "source_file": "context/tasks.md",
+      "id": "context_tasks",
+      "community": 48,
+      "norm_label": "task list doc"
+    },
+    {
+      "label": "Product Vision Doc",
+      "file_type": "document",
+      "source_file": "context/vision.md",
+      "id": "context_vision",
+      "community": 49,
+      "norm_label": "product vision doc"
+    }
+  ],
+  "links": [
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/sitemap.ts",
+      "source": "sitemap",
+      "target": "db"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(auth)/login/page.tsx",
+      "source": "admin_login_page",
+      "target": "auth_client"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/layout.tsx",
+      "source": "admin_dashboard_layout",
+      "target": "AdminSidebar"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/articles/page.tsx",
+      "source": "admin_articles_page",
+      "target": "db"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/articles/new/page.tsx",
+      "source": "admin_new_article_page",
+      "target": "ArticleForm"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/articles/[id]/page.tsx",
+      "source": "admin_edit_article_page",
+      "target": "db"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/articles/[id]/page.tsx",
+      "source": "admin_edit_article_page",
+      "target": "ArticleForm"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/contact/page.tsx",
+      "source": "admin_contact_inbox",
+      "target": "db"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/contact/page.tsx",
+      "source": "admin_contact_inbox",
+      "target": "MarkReadButton"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/dashboard/page.tsx",
+      "source": "admin_dashboard",
+      "target": "db"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/pages/page.tsx",
+      "source": "admin_pages_mgmt",
+      "target": "PageEditor"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/reports/page.tsx",
+      "source": "admin_reports_page",
+      "target": "db"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/reports/new/page.tsx",
+      "source": "admin_new_report_page",
+      "target": "ReportForm"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/reports/[id]/page.tsx",
+      "source": "admin_edit_report_page",
+      "target": "db"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/users/page.tsx",
+      "source": "admin_users_page",
+      "target": "db"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/api/admin/articles/route.ts",
+      "source": "api_admin_articles",
+      "target": "db"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/api/contact/route.ts",
+      "source": "api_contact_form",
+      "target": "resend"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/api/contact/route.ts",
+      "source": "api_contact_form",
+      "target": "db"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/public/ContactForm.tsx",
+      "source": "ContactForm",
+      "target": "api_contact_form"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/[locale]/page.tsx",
+      "source": "public_home",
+      "target": "db"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/[locale]/page.tsx",
+      "source": "public_home",
+      "target": "Header"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/[locale]/page.tsx",
+      "source": "public_home",
+      "target": "Footer"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/admin/ArticleForm.tsx",
+      "source": "ArticleForm",
+      "target": "RichTextEditor"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/public/Header.tsx",
+      "source": "Header",
+      "target": "i18n_routing"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "i18n/request.ts",
+      "source": "i18n_request",
+      "target": "i18n_routing"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/auth.ts",
+      "source": "auth",
+      "target": "db"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "prisma/seed.ts",
+      "source": "seed",
+      "target": "auth"
+    },
+    {
+      "relation": "describes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "context/architecture.md",
+      "source": "context_arch",
+      "target": "auth"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "prisma/seed.ts",
+      "source": "seed",
+      "target": "db"
+    },
+    {
+      "relation": "describes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "context/architecture.md",
+      "source": "context_arch",
+      "target": "db"
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "ad9c770793ff37080dea325684d32720db84e339"
+}

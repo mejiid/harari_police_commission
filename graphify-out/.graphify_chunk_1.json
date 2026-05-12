@@ -1,0 +1,187 @@
+{
+  "nodes": [
+    {
+      "id": "eslint_config",
+      "label": "ESLint Configuration",
+      "file_type": "code",
+      "source_file": "eslint.config.mjs"
+    },
+    {
+      "id": "next_config",
+      "label": "Next.js Configuration",
+      "file_type": "code",
+      "source_file": "next.config.ts"
+    },
+    {
+      "id": "prisma_config",
+      "label": "Prisma Configuration",
+      "file_type": "code",
+      "source_file": "prisma.config.ts"
+    },
+    {
+      "id": "proxy",
+      "label": "Auth & i18n Proxy Middleware",
+      "file_type": "code",
+      "source_file": "proxy.ts"
+    },
+    {
+      "id": "root_layout",
+      "label": "Root Layout",
+      "file_type": "code",
+      "source_file": "app/layout.tsx"
+    },
+    {
+      "id": "home_page",
+      "label": "Home Page",
+      "file_type": "code",
+      "source_file": "app/page.tsx"
+    },
+    {
+      "id": "robots",
+      "label": "Robots.txt Configuration",
+      "file_type": "code",
+      "source_file": "app/robots.ts"
+    },
+    {
+      "id": "sitemap",
+      "label": "Sitemap Generator",
+      "file_type": "code",
+      "source_file": "app/sitemap.ts"
+    },
+    {
+      "id": "admin_login_page",
+      "label": "Admin Login Page",
+      "file_type": "code",
+      "source_file": "app/admin/(auth)/login/page.tsx"
+    },
+    {
+      "id": "admin_dashboard_layout",
+      "label": "Admin Dashboard Layout",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/layout.tsx"
+    },
+    {
+      "id": "admin_articles_page",
+      "label": "Admin Articles Management",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/articles/page.tsx"
+    },
+    {
+      "id": "admin_new_article_page",
+      "label": "Admin New Article Creation",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/articles/new/page.tsx"
+    },
+    {
+      "id": "admin_edit_article_page",
+      "label": "Admin Article Editing",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/articles/[id]/page.tsx"
+    },
+    {
+      "id": "admin_contact_inbox",
+      "label": "Admin Contact Inquiry Inbox",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/contact/page.tsx"
+    },
+    {
+      "id": "admin_dashboard",
+      "label": "Admin Dashboard Overview",
+      "file_type": "code",
+      "source_file": "app/admin/(dashboard)/dashboard/page.tsx"
+    }
+  ],
+  "edges": [
+    {
+      "source": "proxy",
+      "target": "better_auth",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "proxy.ts"
+    },
+    {
+      "source": "sitemap",
+      "target": "db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/sitemap.ts"
+    },
+    {
+      "source": "admin_login_page",
+      "target": "auth_client",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(auth)/login/page.tsx"
+    },
+    {
+      "source": "admin_dashboard_layout",
+      "target": "AdminSidebar",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/layout.tsx"
+    },
+    {
+      "source": "admin_articles_page",
+      "target": "db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/articles/page.tsx"
+    },
+    {
+      "source": "admin_new_article_page",
+      "target": "ArticleForm",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/articles/new/page.tsx"
+    },
+    {
+      "source": "admin_edit_article_page",
+      "target": "db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/articles/[id]/page.tsx"
+    },
+    {
+      "source": "admin_edit_article_page",
+      "target": "ArticleForm",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/articles/[id]/page.tsx"
+    },
+    {
+      "source": "admin_contact_inbox",
+      "target": "db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/contact/page.tsx"
+    },
+    {
+      "source": "admin_contact_inbox",
+      "target": "MarkReadButton",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/contact/page.tsx"
+    },
+    {
+      "source": "admin_dashboard",
+      "target": "db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/admin/(dashboard)/dashboard/page.tsx"
+    }
+  ],
+  "hyperedges": [],
+  "input_tokens": 1500,
+  "output_tokens": 800
+}

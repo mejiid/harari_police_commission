@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>graphify - graphify-out\graph.html</title>
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; height: 100vh; overflow: hidden; }
+  #graph { flex: 1; }
+  #sidebar { width: 280px; background: #1a1a2e; border-left: 1px solid #2a2a4e; display: flex; flex-direction: column; overflow: hidden; }
+  #search-wrap { padding: 12px; border-bottom: 1px solid #2a2a4e; }
+  #search { width: 100%; background: #0f0f1a; border: 1px solid #3a3a5e; color: #e0e0e0; padding: 7px 10px; border-radius: 6px; font-size: 13px; outline: none; }
+  #search:focus { border-color: #4E79A7; }
+  #search-results { max-height: 140px; overflow-y: auto; padding: 4px 12px; border-bottom: 1px solid #2a2a4e; display: none; }
+  .search-item { padding: 4px 6px; cursor: pointer; border-radius: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-item:hover { background: #2a2a4e; }
+  #info-panel { padding: 14px; border-bottom: 1px solid #2a2a4e; min-height: 140px; }
+  #info-panel h3 { font-size: 13px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #info-content { font-size: 13px; color: #ccc; line-height: 1.6; }
+  #info-content .field { margin-bottom: 5px; }
+  #info-content .field b { color: #e0e0e0; }
+  #info-content .empty { color: #555; font-style: italic; }
+  .neighbor-link { display: block; padding: 2px 6px; margin: 2px 0; border-radius: 3px; cursor: pointer; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #333; }
+  .neighbor-link:hover { background: #2a2a4e; }
+  #neighbors-list { max-height: 160px; overflow-y: auto; margin-top: 4px; }
+  #legend-wrap { flex: 1; overflow-y: auto; padding: 12px; }
+  #legend-wrap h3 { font-size: 13px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; border-radius: 4px; font-size: 12px; }
+  .legend-item:hover { background: #2a2a4e; padding-left: 4px; }
+  .legend-item.dimmed { opacity: 0.35; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-count { color: #666; font-size: 11px; }
+  #stats { padding: 10px 14px; border-top: 1px solid #2a2a4e; font-size: 11px; color: #555; }
+  #legend-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 4px 0; }
+  #legend-controls label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; color: #aaa; user-select: none; }
+  #legend-controls label:hover { color: #e0e0e0; }
+  .legend-cb, #select-all-cb { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #3a3a5e; border-radius: 3px; background: #0f0f1a; cursor: pointer; position: relative; flex-shrink: 0; }
+  .legend-cb:checked, #select-all-cb:checked { background: #4E79A7; border-color: #4E79A7; }
+  .legend-cb:checked::after, #select-all-cb:checked::after { content: ''; position: absolute; left: 3.5px; top: 1px; width: 4px; height: 7px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  #select-all-cb:indeterminate { background: #4E79A7; border-color: #4E79A7; }
+  #select-all-cb:indeterminate::after { content: ''; position: absolute; left: 2px; top: 5px; width: 8px; height: 2px; background: #fff; border: none; transform: none; }
+</style>
+</head>
+<body>
+<div id="graph"></div>
+<div id="sidebar">
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search nodes..." autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="info-panel">
+    <h3>Node Info</h3>
+    <div id="info-content"><span class="empty">Click a node to inspect it</span></div>
+  </div>
+  <div id="legend-wrap">
+    <h3>Communities</h3>
+    <div id="legend-controls">
+      <label><input type="checkbox" id="select-all-cb" checked onchange="toggleAllCommunities(!this.checked)">Select All</label>
+    </div>
+    <div id="legend"></div>
+  </div>
+  <div id="stats">74 nodes &middot; 30 edges &middot; 50 communities</div>
+</div>
+<script>
+const RAW_NODES = [{"id": "eslint_config", "label": "ESLint Configuration", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "ESLint Configuration", "community": 9, "community_name": "Community 9", "source_file": "eslint.config.mjs", "file_type": "code", "degree": 0}, {"id": "next_config", "label": "Next.js Configuration", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Next.js Configuration", "community": 10, "community_name": "Community 10", "source_file": "next.config.ts", "file_type": "code", "degree": 0}, {"id": "prisma_config", "label": "Prisma Configuration", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Prisma Configuration", "community": 11, "community_name": "Community 11", "source_file": "prisma.config.ts", "file_type": "code", "degree": 0}, {"id": "proxy", "label": "Auth & i18n Proxy Middleware", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Auth &amp; i18n Proxy Middleware", "community": 12, "community_name": "Community 12", "source_file": "proxy.ts", "file_type": "code", "degree": 0}, {"id": "root_layout", "label": "Root Layout", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Root Layout", "community": 13, "community_name": "Community 13", "source_file": "app/layout.tsx", "file_type": "code", "degree": 0}, {"id": "home_page", "label": "Home Page", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Home Page", "community": 14, "community_name": "Community 14", "source_file": "app/page.tsx", "file_type": "code", "degree": 0}, {"id": "robots", "label": "Robots.txt Configuration", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Robots.txt Configuration", "community": 15, "community_name": "Community 15", "source_file": "app/robots.ts", "file_type": "code", "degree": 0}, {"id": "sitemap", "label": "Sitemap Generator", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Sitemap Generator", "community": 0, "community_name": "Community 0", "source_file": "app/sitemap.ts", "file_type": "code", "degree": 1}, {"id": "admin_login_page", "label": "Admin Login Page", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Login Page", "community": 7, "community_name": "Community 7", "source_file": "app/admin/(auth)/login/page.tsx", "file_type": "code", "degree": 1}, {"id": "admin_dashboard_layout", "label": "Admin Dashboard Layout", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Dashboard Layout", "community": 8, "community_name": "Community 8", "source_file": "app/admin/(dashboard)/layout.tsx", "file_type": "code", "degree": 1}, {"id": "admin_articles_page", "label": "Admin Articles Management", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Articles Management", "community": 0, "community_name": "Community 0", "source_file": "app/admin/(dashboard)/articles/page.tsx", "file_type": "code", "degree": 1}, {"id": "admin_new_article_page", "label": "Admin New Article Creation", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin New Article Creation", "community": 2, "community_name": "Community 2", "source_file": "app/admin/(dashboard)/articles/new/page.tsx", "file_type": "code", "degree": 1}, {"id": "admin_edit_article_page", "label": "Admin Article Editing", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 14.3, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Article Editing", "community": 2, "community_name": "Community 2", "source_file": "app/admin/(dashboard)/articles/[id]/page.tsx", "file_type": "code", "degree": 2}, {"id": "admin_contact_inbox", "label": "Admin Contact Inquiry Inbox", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 14.3, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Contact Inquiry Inbox", "community": 5, "community_name": "Community 5", "source_file": "app/admin/(dashboard)/contact/page.tsx", "file_type": "code", "degree": 2}, {"id": "admin_dashboard", "label": "Admin Dashboard Overview", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Dashboard Overview", "community": 0, "community_name": "Community 0", "source_file": "app/admin/(dashboard)/dashboard/page.tsx", "file_type": "code", "degree": 1}, {"id": "admin_pages_mgmt", "label": "Admin Static Page Management", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Static Page Management", "community": 4, "community_name": "Community 4", "source_file": "app/admin/(dashboard)/pages/page.tsx", "file_type": "code", "degree": 1}, {"id": "admin_reports_page", "label": "Admin Reports Management", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Reports Management", "community": 0, "community_name": "Community 0", "source_file": "app/admin/(dashboard)/reports/page.tsx", "file_type": "code", "degree": 1}, {"id": "admin_new_report_page", "label": "Admin New Report Page", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin New Report Page", "community": 6, "community_name": "Community 6", "source_file": "app/admin/(dashboard)/reports/new/page.tsx", "file_type": "code", "degree": 1}, {"id": "admin_edit_report_page", "label": "Admin Edit Report Page", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Edit Report Page", "community": 0, "community_name": "Community 0", "source_file": "app/admin/(dashboard)/reports/[id]/page.tsx", "file_type": "code", "degree": 1}, {"id": "admin_users_page", "label": "Admin Users Management", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Users Management", "community": 0, "community_name": "Community 0", "source_file": "app/admin/(dashboard)/users/page.tsx", "file_type": "code", "degree": 1}, {"id": "admin_new_user_page", "label": "Admin New User Creation", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin New User Creation", "community": 16, "community_name": "Community 16", "source_file": "app/admin/(dashboard)/users/new/page.tsx", "file_type": "code", "degree": 0}, {"id": "api_admin_articles", "label": "API: Admin Articles CRUD", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "API: Admin Articles CRUD", "community": 0, "community_name": "Community 0", "source_file": "app/api/admin/articles/route.ts", "file_type": "code", "degree": 1}, {"id": "api_admin_article_by_id", "label": "API: Admin Article Entity", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "API: Admin Article Entity", "community": 17, "community_name": "Community 17", "source_file": "app/api/admin/articles/[id]/route.ts", "file_type": "code", "degree": 0}, {"id": "api_admin_contact_read", "label": "API: Contact Message Status", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "API: Contact Message Status", "community": 18, "community_name": "Community 18", "source_file": "app/api/admin/contact/[id]/read/route.ts", "file_type": "code", "degree": 0}, {"id": "api_admin_pages", "label": "API: Static Content Upsert", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "API: Static Content Upsert", "community": 19, "community_name": "Community 19", "source_file": "app/api/admin/pages/route.ts", "file_type": "code", "degree": 0}, {"id": "api_admin_reports", "label": "API: Admin Reports CRUD", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "API: Admin Reports CRUD", "community": 20, "community_name": "Community 20", "source_file": "app/api/admin/reports/route.ts", "file_type": "code", "degree": 0}, {"id": "api_admin_report_by_id", "label": "API: Admin Report Entity", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "API: Admin Report Entity", "community": 21, "community_name": "Community 21", "source_file": "app/api/admin/reports/[id]/route.ts", "file_type": "code", "degree": 0}, {"id": "api_admin_upload", "label": "API: institutional PDF Upload", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "API: institutional PDF Upload", "community": 22, "community_name": "Community 22", "source_file": "app/api/admin/upload/route.ts", "file_type": "code", "degree": 0}, {"id": "api_admin_users", "label": "API: Admin User Management", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "API: Admin User Management", "community": 23, "community_name": "Community 23", "source_file": "app/api/admin/users/route.ts", "file_type": "code", "degree": 0}, {"id": "api_admin_user_by_id", "label": "API: Admin User Entity", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "API: Admin User Entity", "community": 24, "community_name": "Community 24", "source_file": "app/api/admin/users/[id]/route.ts", "file_type": "code", "degree": 0}, {"id": "api_auth_handler", "label": "API: Auth Provider Handler", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "API: Auth Provider Handler", "community": 25, "community_name": "Community 25", "source_file": "app/api/auth/[...all]/route.ts", "file_type": "code", "degree": 0}, {"id": "api_contact_form", "label": "API: Public Inquiry Submission", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 16.4, "font": {"size": 12, "color": "#ffffff"}, "title": "API: Public Inquiry Submission", "community": 3, "community_name": "Community 3", "source_file": "app/api/contact/route.ts", "file_type": "code", "degree": 3}, {"id": "public_error", "label": "Public Error Boundary", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Public Error Boundary", "community": 26, "community_name": "Community 26", "source_file": "app/[locale]/error.tsx", "file_type": "code", "degree": 0}, {"id": "public_locale_layout", "label": "Public Multi-locale Layout", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Public Multi-locale Layout", "community": 27, "community_name": "Community 27", "source_file": "app/[locale]/layout.tsx", "file_type": "code", "degree": 0}, {"id": "public_not_found", "label": "Public Not Found Page", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Public Not Found Page", "community": 28, "community_name": "Community 28", "source_file": "app/[locale]/not-found.tsx", "file_type": "code", "degree": 0}, {"id": "public_home", "label": "Public Homepage", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 16.4, "font": {"size": 12, "color": "#ffffff"}, "title": "Public Homepage", "community": 1, "community_name": "Community 1", "source_file": "app/[locale]/page.tsx", "file_type": "code", "degree": 3}, {"id": "public_about", "label": "Public About Page", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Public About Page", "community": 29, "community_name": "Community 29", "source_file": "app/[locale]/about/page.tsx", "file_type": "code", "degree": 0}, {"id": "public_contact", "label": "Public Contact Page", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Public Contact Page", "community": 30, "community_name": "Community 30", "source_file": "app/[locale]/contact/page.tsx", "file_type": "code", "degree": 0}, {"id": "public_news", "label": "Public News List", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Public News List", "community": 31, "community_name": "Community 31", "source_file": "app/[locale]/news/page.tsx", "file_type": "code", "degree": 0}, {"id": "public_news_detail", "label": "Public News Detail Page", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Public News Detail Page", "community": 32, "community_name": "Community 32", "source_file": "app/[locale]/news/[slug]/page.tsx", "file_type": "code", "degree": 0}, {"id": "public_reports", "label": "Public Reports List", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Public Reports List", "community": 33, "community_name": "Community 33", "source_file": "app/[locale]/reports/page.tsx", "file_type": "code", "degree": 0}, {"id": "AdminSidebar", "label": "Admin Navigation Sidebar", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Navigation Sidebar", "community": 8, "community_name": "Community 8", "source_file": "components/admin/AdminSidebar.tsx", "file_type": "code", "degree": 1}, {"id": "ArticleForm", "label": "Admin Article Editorial Form", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 16.4, "font": {"size": 12, "color": "#ffffff"}, "title": "Admin Article Editorial Form", "community": 2, "community_name": "Community 2", "source_file": "components/admin/ArticleForm.tsx", "file_type": "code", "degree": 3}, {"id": "MarkReadButton", "label": "Admin Mark Read Utility", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Mark Read Utility", "community": 5, "community_name": "Community 5", "source_file": "components/admin/MarkReadButton.tsx", "file_type": "code", "degree": 1}, {"id": "PageEditor", "label": "Admin Content Editor", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Content Editor", "community": 4, "community_name": "Community 4", "source_file": "components/admin/PageEditor.tsx", "file_type": "code", "degree": 1}, {"id": "ReportForm", "label": "Admin Report Upload Form", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Report Upload Form", "community": 6, "community_name": "Community 6", "source_file": "components/admin/ReportForm.tsx", "file_type": "code", "degree": 1}, {"id": "RichTextEditor", "label": "Admin Rich Text Editor", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin Rich Text Editor", "community": 2, "community_name": "Community 2", "source_file": "components/admin/RichTextEditor.tsx", "file_type": "code", "degree": 1}, {"id": "UserActions", "label": "Admin User Management Utility", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Admin User Management Utility", "community": 34, "community_name": "Community 34", "source_file": "components/admin/UserActions.tsx", "file_type": "code", "degree": 0}, {"id": "ContactForm", "label": "Public Inquiry Form", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Public Inquiry Form", "community": 3, "community_name": "Community 3", "source_file": "components/public/ContactForm.tsx", "file_type": "code", "degree": 1}, {"id": "Footer", "label": "Public Website Footer", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Public Website Footer", "community": 1, "community_name": "Community 1", "source_file": "components/public/Footer.tsx", "file_type": "code", "degree": 1}, {"id": "Header", "label": "Public Website Header", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 14.3, "font": {"size": 0, "color": "#ffffff"}, "title": "Public Website Header", "community": 1, "community_name": "Community 1", "source_file": "components/public/Header.tsx", "file_type": "code", "degree": 2}, {"id": "i18n_request", "label": "i18n Request Config", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "i18n Request Config", "community": 1, "community_name": "Community 1", "source_file": "i18n/request.ts", "file_type": "code", "degree": 1}, {"id": "i18n_routing", "label": "i18n Routing Setup", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 14.3, "font": {"size": 0, "color": "#ffffff"}, "title": "i18n Routing Setup", "community": 1, "community_name": "Community 1", "source_file": "i18n/routing.ts", "file_type": "code", "degree": 2}, {"id": "auth_client", "label": "Better Auth React Client", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Better Auth React Client", "community": 7, "community_name": "Community 7", "source_file": "lib/auth-client.ts", "file_type": "code", "degree": 1}, {"id": "auth", "label": "Better Auth Server Config", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 16.4, "font": {"size": 12, "color": "#ffffff"}, "title": "Better Auth Server Config", "community": 0, "community_name": "Community 0", "source_file": "lib/auth.ts", "file_type": "code", "degree": 3}, {"id": "db", "label": "Prisma DB Client", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Prisma DB Client", "community": 0, "community_name": "Community 0", "source_file": "lib/db.ts", "file_type": "code", "degree": 14}, {"id": "imagekit", "label": "ImageKit Node.js Client", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "ImageKit Node.js Client", "community": 35, "community_name": "Community 35", "source_file": "lib/imagekit.ts", "file_type": "code", "degree": 0}, {"id": "rate_limit", "label": "In-Memory Rate Limiter", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "In-Memory Rate Limiter", "community": 36, "community_name": "Community 36", "source_file": "lib/rate-limit.ts", "file_type": "code", "degree": 0}, {"id": "resend", "label": "Resend Email Client", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 12.1, "font": {"size": 0, "color": "#ffffff"}, "title": "Resend Email Client", "community": 3, "community_name": "Community 3", "source_file": "lib/resend.ts", "file_type": "code", "degree": 1}, {"id": "sanitize", "label": "Input Sanitization Utils", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Input Sanitization Utils", "community": 37, "community_name": "Community 37", "source_file": "lib/sanitize.ts", "file_type": "code", "degree": 0}, {"id": "utils", "label": "General Utilities", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "General Utilities", "community": 38, "community_name": "Community 38", "source_file": "lib/utils.ts", "file_type": "code", "degree": 0}, {"id": "seed", "label": "Database Seeding Script", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 14.3, "font": {"size": 0, "color": "#ffffff"}, "title": "Database Seeding Script", "community": 0, "community_name": "Community 0", "source_file": "prisma/seed.ts", "file_type": "code", "degree": 2}, {"id": "AGENTS_md", "label": "Agent Rules", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Agent Rules", "community": 39, "community_name": "Community 39", "source_file": "AGENTS.md", "file_type": "document", "degree": 0}, {"id": "CLAUDE_md", "label": "Claude Instructions", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Claude Instructions", "community": 40, "community_name": "Community 40", "source_file": "CLAUDE.md", "file_type": "document", "degree": 0}, {"id": "README_md", "label": "Project README", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Project README", "community": 41, "community_name": "Community 41", "source_file": "README.md", "file_type": "document", "degree": 0}, {"id": "context_api", "label": "API Design Doc", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "API Design Doc", "community": 42, "community_name": "Community 42", "source_file": "context/api.md", "file_type": "document", "degree": 0}, {"id": "context_arch", "label": "Architecture Doc", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 14.3, "font": {"size": 0, "color": "#ffffff"}, "title": "Architecture Doc", "community": 0, "community_name": "Community 0", "source_file": "context/architecture.md", "file_type": "document", "degree": 2}, {"id": "context_db", "label": "Database Design Doc", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Database Design Doc", "community": 43, "community_name": "Community 43", "source_file": "context/database.md", "file_type": "document", "degree": 0}, {"id": "context_decisions", "label": "Architecture Decision Records", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Architecture Decision Records", "community": 44, "community_name": "Community 44", "source_file": "context/decisioins.md", "file_type": "document", "degree": 0}, {"id": "context_design", "label": "Design System Doc", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Design System Doc", "community": 45, "community_name": "Community 45", "source_file": "context/design.md", "file_type": "document", "degree": 0}, {"id": "context_features", "label": "Feature Requirements Doc", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Feature Requirements Doc", "community": 46, "community_name": "Community 46", "source_file": "context/features.md", "file_type": "document", "degree": 0}, {"id": "context_roadmap", "label": "Project Roadmap Doc", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Project Roadmap Doc", "community": 47, "community_name": "Community 47", "source_file": "context/roadmap.md", "file_type": "document", "degree": 0}, {"id": "context_tasks", "label": "Task List Doc", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Task List Doc", "community": 48, "community_name": "Community 48", "source_file": "context/tasks.md", "file_type": "document", "degree": 0}, {"id": "context_vision", "label": "Product Vision Doc", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Product Vision Doc", "community": 49, "community_name": "Community 49", "source_file": "context/vision.md", "file_type": "document", "degree": 0}];
+const RAW_EDGES = [{"from": "sitemap", "to": "db", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_login_page", "to": "auth_client", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_dashboard_layout", "to": "AdminSidebar", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_articles_page", "to": "db", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_new_article_page", "to": "ArticleForm", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_edit_article_page", "to": "db", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_edit_article_page", "to": "ArticleForm", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_contact_inbox", "to": "db", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_contact_inbox", "to": "MarkReadButton", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_dashboard", "to": "db", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_pages_mgmt", "to": "PageEditor", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_reports_page", "to": "db", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_new_report_page", "to": "ReportForm", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_edit_report_page", "to": "db", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "admin_users_page", "to": "db", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_admin_articles", "to": "db", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_contact_form", "to": "resend", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_contact_form", "to": "db", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "ContactForm", "to": "api_contact_form", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "public_home", "to": "db", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "public_home", "to": "Header", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "public_home", "to": "Footer", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "ArticleForm", "to": "RichTextEditor", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "Header", "to": "i18n_routing", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "i18n_request", "to": "i18n_routing", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "auth", "to": "db", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "seed", "to": "auth", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "context_arch", "to": "auth", "label": "describes", "title": "describes [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "seed", "to": "db", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "context_arch", "to": "db", "label": "describes", "title": "describes [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}];
+const LEGEND = [{"cid": 0, "color": "#4E79A7", "label": "Community 0", "count": 11}, {"cid": 1, "color": "#F28E2B", "label": "Community 1", "count": 5}, {"cid": 2, "color": "#E15759", "label": "Community 2", "count": 4}, {"cid": 3, "color": "#76B7B2", "label": "Community 3", "count": 3}, {"cid": 4, "color": "#59A14F", "label": "Community 4", "count": 2}, {"cid": 5, "color": "#EDC948", "label": "Community 5", "count": 2}, {"cid": 6, "color": "#B07AA1", "label": "Community 6", "count": 2}, {"cid": 7, "color": "#FF9DA7", "label": "Community 7", "count": 2}, {"cid": 8, "color": "#9C755F", "label": "Community 8", "count": 2}, {"cid": 9, "color": "#BAB0AC", "label": "Community 9", "count": 1}, {"cid": 10, "color": "#4E79A7", "label": "Community 10", "count": 1}, {"cid": 11, "color": "#F28E2B", "label": "Community 11", "count": 1}, {"cid": 12, "color": "#E15759", "label": "Community 12", "count": 1}, {"cid": 13, "color": "#76B7B2", "label": "Community 13", "count": 1}, {"cid": 14, "color": "#59A14F", "label": "Community 14", "count": 1}, {"cid": 15, "color": "#EDC948", "label": "Community 15", "count": 1}, {"cid": 16, "color": "#B07AA1", "label": "Community 16", "count": 1}, {"cid": 17, "color": "#FF9DA7", "label": "Community 17", "count": 1}, {"cid": 18, "color": "#9C755F", "label": "Community 18", "count": 1}, {"cid": 19, "color": "#BAB0AC", "label": "Community 19", "count": 1}, {"cid": 20, "color": "#4E79A7", "label": "Community 20", "count": 1}, {"cid": 21, "color": "#F28E2B", "label": "Community 21", "count": 1}, {"cid": 22, "color": "#E15759", "label": "Community 22", "count": 1}, {"cid": 23, "color": "#76B7B2", "label": "Community 23", "count": 1}, {"cid": 24, "color": "#59A14F", "label": "Community 24", "count": 1}, {"cid": 25, "color": "#EDC948", "label": "Community 25", "count": 1}, {"cid": 26, "color": "#B07AA1", "label": "Community 26", "count": 1}, {"cid": 27, "color": "#FF9DA7", "label": "Community 27", "count": 1}, {"cid": 28, "color": "#9C755F", "label": "Community 28", "count": 1}, {"cid": 29, "color": "#BAB0AC", "label": "Community 29", "count": 1}, {"cid": 30, "color": "#4E79A7", "label": "Community 30", "count": 1}, {"cid": 31, "color": "#F28E2B", "label": "Community 31", "count": 1}, {"cid": 32, "color": "#E15759", "label": "Community 32", "count": 1}, {"cid": 33, "color": "#76B7B2", "label": "Community 33", "count": 1}, {"cid": 34, "color": "#59A14F", "label": "Community 34", "count": 1}, {"cid": 35, "color": "#EDC948", "label": "Community 35", "count": 1}, {"cid": 36, "color": "#B07AA1", "label": "Community 36", "count": 1}, {"cid": 37, "color": "#FF9DA7", "label": "Community 37", "count": 1}, {"cid": 38, "color": "#9C755F", "label": "Community 38", "count": 1}, {"cid": 39, "color": "#BAB0AC", "label": "Community 39", "count": 1}, {"cid": 40, "color": "#4E79A7", "label": "Community 40", "count": 1}, {"cid": 41, "color": "#F28E2B", "label": "Community 41", "count": 1}, {"cid": 42, "color": "#E15759", "label": "Community 42", "count": 1}, {"cid": 43, "color": "#76B7B2", "label": "Community 43", "count": 1}, {"cid": 44, "color": "#59A14F", "label": "Community 44", "count": 1}, {"cid": 45, "color": "#EDC948", "label": "Community 45", "count": 1}, {"cid": 46, "color": "#B07AA1", "label": "Community 46", "count": 1}, {"cid": 47, "color": "#FF9DA7", "label": "Community 47", "count": 1}, {"cid": 48, "color": "#9C755F", "label": "Community 48", "count": 1}, {"cid": 49, "color": "#BAB0AC", "label": "Community 49", "count": 1}];
+
+// HTML-escape helper — prevents XSS when injecting graph data into innerHTML
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Build vis datasets
+const nodesDS = new vis.DataSet(RAW_NODES.map(n => ({
+  id: n.id, label: n.label, color: n.color, size: n.size,
+  font: n.font, title: n.title,
+  _community: n.community, _community_name: n.community_name,
+  _source_file: n.source_file, _file_type: n.file_type, _degree: n.degree,
+})));
+
+const edgesDS = new vis.DataSet(RAW_EDGES.map((e, i) => ({
+  id: i, from: e.from, to: e.to,
+  label: '',
+  title: e.title,
+  dashes: e.dashes,
+  width: e.width,
+  color: e.color,
+  arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+})));
+
+const container = document.getElementById('graph');
+const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based',
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.005,
+      springLength: 120,
+      springConstant: 0.08,
+      damping: 0.4,
+      avoidOverlap: 0.8,
+    },
+    stabilization: { iterations: 200, fit: true },
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 100,
+    hideEdgesOnDrag: true,
+    navigationButtons: false,
+    keyboard: false,
+  },
+  nodes: { shape: 'dot', borderWidth: 1.5 },
+  edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
+});
+
+network.once('stabilizationIterationsDone', () => {
+  network.setOptions({ physics: { enabled: false } });
+});
+
+function showInfo(nodeId) {
+  const n = nodesDS.get(nodeId);
+  if (!n) return;
+  const neighborIds = network.getConnectedNodes(nodeId);
+  const neighborItems = neighborIds.map(nid => {
+    const nb = nodesDS.get(nid);
+    const color = nb ? nb.color.background : '#555';
+    return `<span class="neighbor-link" style="border-left-color:${esc(color)}" onclick="focusNode(${JSON.stringify(nid)})">${esc(nb ? nb.label : nid)}</span>`;
+  }).join('');
+  document.getElementById('info-content').innerHTML = `
+    <div class="field"><b>${esc(n.label)}</b></div>
+    <div class="field">Type: ${esc(n._file_type || 'unknown')}</div>
+    <div class="field">Community: ${esc(n._community_name)}</div>
+    <div class="field">Source: ${esc(n._source_file || '-')}</div>
+    <div class="field">Degree: ${n._degree}</div>
+    ${neighborIds.length ? `<div class="field" style="margin-top:8px;color:#aaa;font-size:11px">Neighbors (${neighborIds.length})</div><div id="neighbors-list">${neighborItems}</div>` : ''}
+  `;
+}
+
+function focusNode(nodeId) {
+  network.focus(nodeId, { scale: 1.4, animation: true });
+  network.selectNodes([nodeId]);
+  showInfo(nodeId);
+}
+
+// Track hovered node — hover detection is more reliable than click params
+let hoveredNodeId = null;
+network.on('hoverNode', params => {
+  hoveredNodeId = params.node;
+  container.style.cursor = 'pointer';
+});
+network.on('blurNode', () => {
+  hoveredNodeId = null;
+  container.style.cursor = 'default';
+});
+container.addEventListener('click', () => {
+  if (hoveredNodeId !== null) {
+    showInfo(hoveredNodeId);
+    network.selectNodes([hoveredNodeId]);
+  }
+});
+network.on('click', params => {
+  if (params.nodes.length > 0) {
+    showInfo(params.nodes[0]);
+  } else if (hoveredNodeId === null) {
+    document.getElementById('info-content').innerHTML = '<span class="empty">Click a node to inspect it</span>';
+  }
+});
+
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  searchResults.innerHTML = '';
+  if (!q) { searchResults.style.display = 'none'; return; }
+  const matches = RAW_NODES.filter(n => n.label.toLowerCase().includes(q)).slice(0, 20);
+  if (!matches.length) { searchResults.style.display = 'none'; return; }
+  searchResults.style.display = 'block';
+  matches.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'search-item';
+    el.textContent = n.label;
+    el.style.borderLeft = `3px solid ${n.color.background}`;
+    el.style.paddingLeft = '8px';
+    el.onclick = () => {
+      network.focus(n.id, { scale: 1.5, animation: true });
+      network.selectNodes([n.id]);
+      showInfo(n.id);
+      searchResults.style.display = 'none';
+      searchInput.value = '';
+    };
+    searchResults.appendChild(el);
+  });
+});
+document.addEventListener('click', e => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput)
+    searchResults.style.display = 'none';
+});
+
+const hiddenCommunities = new Set();
+
+const selectAllCb = document.getElementById('select-all-cb');
+
+function updateSelectAllState() {
+  const total = LEGEND.length;
+  const hidden = hiddenCommunities.size;
+  selectAllCb.checked = hidden === 0;
+  selectAllCb.indeterminate = hidden > 0 && hidden < total;
+}
+
+function toggleAllCommunities(hide) {
+  document.querySelectorAll('.legend-item').forEach(item => {
+    hide ? item.classList.add('dimmed') : item.classList.remove('dimmed');
+  });
+  document.querySelectorAll('.legend-cb').forEach(cb => {
+    cb.checked = !hide;
+  });
+  LEGEND.forEach(c => {
+    if (hide) hiddenCommunities.add(c.cid); else hiddenCommunities.delete(c.cid);
+  });
+  const updates = RAW_NODES.map(n => ({ id: n.id, hidden: hide }));
+  nodesDS.update(updates);
+  updateSelectAllState();
+}
+
+const legendEl = document.getElementById('legend');
+LEGEND.forEach(c => {
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.className = 'legend-cb';
+  cb.checked = true;
+  cb.addEventListener('change', (e) => {
+    e.stopPropagation();
+    if (cb.checked) {
+      hiddenCommunities.delete(c.cid);
+      item.classList.remove('dimmed');
+    } else {
+      hiddenCommunities.add(c.cid);
+      item.classList.add('dimmed');
+    }
+    const updates = RAW_NODES
+      .filter(n => n.community === c.cid)
+      .map(n => ({ id: n.id, hidden: !cb.checked }));
+    nodesDS.update(updates);
+    updateSelectAllState();
+  });
+  item.innerHTML = `<div class="legend-dot" style="background:${c.color}"></div>
+    <span class="legend-label">${c.label}</span>
+    <span class="legend-count">${c.count}</span>`;
+  item.prepend(cb);
+  item.onclick = (e) => {
+    if (e.target === cb) return;
+    cb.checked = !cb.checked;
+    cb.dispatchEvent(new Event('change'));
+  };
+  legendEl.appendChild(item);
+});
+</script>
+<script>
+// Render hyperedges as shaded regions
+const hyperedges = [];
+// afterDrawing passes ctx already transformed to network coordinate space.
+// Draw node positions raw — no manual pan/zoom/DPR math needed.
+network.on('afterDrawing', function(ctx) {
+    hyperedges.forEach(h => {
+        const positions = h.nodes
+            .map(nid => network.getPositions([nid])[nid])
+            .filter(p => p !== undefined);
+        if (positions.length < 2) return;
+        ctx.save();
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = '#6366f1';
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        // Centroid and expanded hull in network coordinates
+        const cx = positions.reduce((s, p) => s + p.x, 0) / positions.length;
+        const cy = positions.reduce((s, p) => s + p.y, 0) / positions.length;
+        const expanded = positions.map(p => ({
+            x: cx + (p.x - cx) * 1.15,
+            y: cy + (p.y - cy) * 1.15
+        }));
+        ctx.moveTo(expanded[0].x, expanded[0].y);
+        expanded.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 0.4;
+        ctx.stroke();
+        // Label
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = '#4f46e5';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(h.label, cx, cy - 5);
+        ctx.restore();
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+{
+  "nodes": [
+    {
+      "id": "auth_client",
+      "label": "Better Auth React Client",
+      "file_type": "code",
+      "source_file": "lib/auth-client.ts"
+    },
+    {
+      "id": "auth",
+      "label": "Better Auth Server Config",
+      "file_type": "code",
+      "source_file": "lib/auth.ts"
+    },
+    {
+      "id": "db",
+      "label": "Prisma DB Client",
+      "file_type": "code",
+      "source_file": "lib/db.ts"
+    },
+    {
+      "id": "imagekit",
+      "label": "ImageKit Node.js Client",
+      "file_type": "code",
+      "source_file": "lib/imagekit.ts"
+    },
+    {
+      "id": "rate_limit",
+      "label": "In-Memory Rate Limiter",
+      "file_type": "code",
+      "source_file": "lib/rate-limit.ts"
+    },
+    {
+      "id": "resend",
+      "label": "Resend Email Client",
+      "file_type": "code",
+      "source_file": "lib/resend.ts"
+    },
+    {
+      "id": "sanitize",
+      "label": "Input Sanitization Utils",
+      "file_type": "code",
+      "source_file": "lib/sanitize.ts"
+    },
+    {
+      "id": "utils",
+      "label": "General Utilities",
+      "file_type": "code",
+      "source_file": "lib/utils.ts"
+    },
+    {
+      "id": "seed",
+      "label": "Database Seeding Script",
+      "file_type": "code",
+      "source_file": "prisma/seed.ts"
+    },
+    {
+      "id": "AGENTS_md",
+      "label": "Agent Rules",
+      "file_type": "document",
+      "source_file": "AGENTS.md"
+    },
+    {
+      "id": "CLAUDE_md",
+      "label": "Claude Instructions",
+      "file_type": "document",
+      "source_file": "CLAUDE.md"
+    },
+    {
+      "id": "README_md",
+      "label": "Project README",
+      "file_type": "document",
+      "source_file": "README.md"
+    },
+    {
+      "id": "context_api",
+      "label": "API Design Doc",
+      "file_type": "document",
+      "source_file": "context/api.md"
+    },
+    {
+      "id": "context_arch",
+      "label": "Architecture Doc",
+      "file_type": "document",
+      "source_file": "context/architecture.md"
+    },
+    {
+      "id": "context_db",
+      "label": "Database Design Doc",
+      "file_type": "document",
+      "source_file": "context/database.md"
+    },
+    {
+      "id": "context_decisions",
+      "label": "Architecture Decision Records",
+      "file_type": "document",
+      "source_file": "context/decisioins.md"
+    },
+    {
+      "id": "context_design",
+      "label": "Design System Doc",
+      "file_type": "document",
+      "source_file": "context/design.md"
+    },
+    {
+      "id": "context_features",
+      "label": "Feature Requirements Doc",
+      "file_type": "document",
+      "source_file": "context/features.md"
+    },
+    {
+      "id": "context_roadmap",
+      "label": "Project Roadmap Doc",
+      "file_type": "document",
+      "source_file": "context/roadmap.md"
+    },
+    {
+      "id": "context_tasks",
+      "label": "Task List Doc",
+      "file_type": "document",
+      "source_file": "context/tasks.md"
+    },
+    {
+      "id": "context_vision",
+      "label": "Product Vision Doc",
+      "file_type": "document",
+      "source_file": "context/vision.md"
+    }
+  ],
+  "edges": [
+    {
+      "source": "auth",
+      "target": "db",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/auth.ts"
+    },
+    {
+      "source": "seed",
+      "target": "db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "prisma/seed.ts"
+    },
+    {
+      "source": "seed",
+      "target": "auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "prisma/seed.ts"
+    },
+    {
+      "source": "context_arch",
+      "target": "db",
+      "relation": "describes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "context/architecture.md"
+    },
+    {
+      "source": "context_arch",
+      "target": "auth",
+      "relation": "describes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "context/architecture.md"
+    }
+  ],
+  "hyperedges": [],
+  "input_tokens": 2000,
+  "output_tokens": 1000
+}

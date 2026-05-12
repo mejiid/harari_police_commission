@@ -48,7 +48,10 @@ export default async function HomePage({ params }: Props) {
       <Header />
       <main className="flex-1">
         <HeroSection locale={locale} />
+        <QuickAccessSection locale={locale} />
         <NewsSection articles={articles} locale={locale} />
+        <StatisticsSection />
+        <MissionSection />
         <ReportsSection reports={reports} locale={locale} />
       </main>
       <Footer />
@@ -59,37 +62,140 @@ export default async function HomePage({ params }: Props) {
 function HeroSection({ locale }: { locale: string }) {
   const t = useTranslations("home");
   return (
-    <section className="relative min-h-[80vh] flex items-center overflow-hidden bg-primary">
-      {/* Editorial Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,var(--color-primary-container)_0%,transparent_50%)]" />
-        <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_70%,var(--color-primary-container)_0%,transparent_50%)]" />
+    <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-primary">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="https://images.unsplash.com/photo-1541829070764-84a7d30dee93?q=80&w=2070&auto=format&fit=crop" 
+          className="w-full h-full object-cover opacity-30"
+          alt="Institutional Authority"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-transparent" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 editorial-grid py-20">
-        <div className="editorial-content">
-          <div className="inline-block px-3 py-1 bg-accent/20 border border-accent/30 text-accent text-[10px] font-bold uppercase tracking-[0.3em] mb-8 animate-in fade-in slide-in-from-bottom duration-500">
-            Institutional Transparency
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24">
+        <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-3 px-3 py-1 bg-accent/20 border border-accent/30 text-accent text-[10px] font-bold uppercase tracking-[0.3em] mb-8 animate-in fade-in slide-in-from-bottom duration-500">
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+            Official Portal
           </div>
-          <h1 className="display-lg text-white mb-8 animate-in fade-in slide-in-from-bottom duration-700 delay-100">
-            {t("hero_title")}
+          <h1 className="display-lg text-white mb-8 animate-in fade-in slide-in-from-bottom duration-700 delay-100 leading-[1.1]">
+            Upholding Justice.<br />Securing Our Community.
           </h1>
-          <p className="text-xl text-white/60 max-w-2xl mb-12 leading-relaxed animate-in fade-in slide-in-from-bottom duration-700 delay-200">
-            {t("hero_subtitle")}
+          <p className="text-xl text-white/70 max-w-2xl mb-12 leading-relaxed animate-in fade-in slide-in-from-bottom duration-700 delay-200">
+            Providing transparent access to institutional updates, reports, and public services 
+            for the people of the Harari Region.
           </p>
           <div className="flex flex-wrap gap-6 animate-in fade-in slide-in-from-bottom duration-700 delay-300">
             <Link
               href={`/${locale}/news`}
-              className="bg-white text-primary font-bold px-8 py-4 text-xs uppercase tracking-widest hover:bg-accent hover:text-white transition-all shadow-xl"
+              className="bg-accent text-white font-bold px-10 py-5 text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl"
             >
-              {t("latest_news")}
+              Latest Updates
             </Link>
             <Link
-              href={`/${locale}/reports`}
-              className="border border-white/20 text-white font-bold px-8 py-4 text-xs uppercase tracking-widest hover:bg-white/10 transition-all"
+              href={`/${locale}/contact`}
+              className="bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold px-10 py-5 text-xs uppercase tracking-widest hover:bg-white/20 transition-all"
             >
-              {t("latest_reports")}
+              Contact Commission
             </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function QuickAccessSection({ locale }: { locale: string }) {
+  const services = [
+    { title: "Family Visitation", desc: "Schedule and manage inmate visits online.", icon: "👥" },
+    { title: "Legal Representation", desc: "Resources and portals for legal professionals.", icon: "⚖️" },
+    { title: "Inmate Locator", desc: "Search for inmates within the commission system.", icon: "🔍" },
+    { title: "Career Opportunities", desc: "Join the Harari Prison Police Commission.", icon: "🛡️" },
+  ];
+
+  return (
+    <section className="relative z-20 -mt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-outline-variant/30 shadow-2xl border border-outline-variant/30 overflow-hidden">
+        {services.map((service, i) => (
+          <div key={i} className="bg-white p-10 hover:bg-surface-container-low transition-colors group cursor-pointer">
+            <div className="text-3xl mb-6 grayscale group-hover:grayscale-0 transition-all">
+              {service.icon}
+            </div>
+            <h3 className="text-sm font-display font-extrabold text-primary uppercase tracking-widest mb-3">
+              {service.title}
+            </h3>
+            <p className="text-xs text-on-surface-variant leading-relaxed">
+              {service.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function StatisticsSection() {
+  const stats = [
+    { label: "Commission Staff", value: "1,200+" },
+    { label: "Rehabilitation Rate", value: "84%" },
+    { label: "Facility Capacity", value: "100%" },
+    { label: "Years of Service", value: "25+" },
+  ];
+
+  return (
+    <section className="py-24 bg-primary text-white overflow-hidden relative">
+      <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+          {stats.map((stat, i) => (
+            <div key={i} className="space-y-2">
+              <div className="display-sm text-accent">{stat.value}</div>
+              <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40">
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MissionSection() {
+  return (
+    <section className="py-32 px-4 bg-white">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+        <div className="relative aspect-square">
+          <img 
+            src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop" 
+            className="w-full h-full object-cover shadow-2xl"
+            alt="Leadership"
+          />
+          <div className="absolute -bottom-12 -right-12 w-64 h-64 bg-accent/10 -z-10" />
+        </div>
+        <div className="space-y-8">
+          <h2 className="headline-md text-primary leading-tight">
+            Our Commitment to the <span className="text-accent">Rule of Law</span> and Human Dignity.
+          </h2>
+          <div className="space-y-6 text-on-surface-variant leading-relaxed">
+            <p>
+              The Harari Prison Police Commission operates on the foundational principles of 
+              integrity, security, and rehabilitation. Our mission is to protect the public 
+              while ensuring that those in our care are treated with the dignity required 
+              by international standards.
+            </p>
+            <p className="font-bold text-primary italic border-l-4 border-accent pl-6">
+              "We believe that true security comes from a balance of firm discipline 
+              and transformative rehabilitation programs."
+            </p>
+          </div>
+          <div className="pt-8 flex items-center gap-6">
+            <div className="w-16 h-16 bg-primary-container rounded-full" />
+            <div>
+              <div className="font-display font-bold text-primary">Official Commissioner</div>
+              <div className="text-xs uppercase tracking-widest text-on-surface-variant">HPPC Leadership</div>
+            </div>
           </div>
         </div>
       </div>
