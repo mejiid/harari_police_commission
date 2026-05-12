@@ -43,8 +43,8 @@ export default function AdminSidebar({ mobileOpen, setMobileOpen }: {
       {/* Brand */}
       <div className="px-6 py-8 border-b border-white/5">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-accent flex items-center justify-center text-white shadow-xl shadow-accent/20">
-             <ShieldCheck className="w-6 h-6" />
+          <div className="flex items-center">
+             <img src="/logo.png" alt="Harari Police Logo" className="h-10 w-auto object-contain" />
           </div>
           <div>
             <p className="font-display font-bold text-sm tracking-tight leading-none">ADMIN PORTAL</p>

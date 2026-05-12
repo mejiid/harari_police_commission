@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 async function getAboutContent(locale: string) {
-  return db.pageContent.findUnique({
+  const content = await db.pageContent.findUnique({
     where: {
       pageKey_language: {
         pageKey: "about",
@@ -22,6 +22,19 @@ async function getAboutContent(locale: string) {
       },
     },
   });
+
+  if (!content && locale === "har") {
+    return db.pageContent.findUnique({
+      where: {
+        pageKey_language: {
+          pageKey: "about",
+          language: "am",
+        },
+      },
+    });
+  }
+
+  return content;
 }
 
 function AboutHeader() {

@@ -43,8 +43,12 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo + Name */}
           <Link href={`/${locale}`} className="flex items-center gap-4 group">
-            <div className="w-12 h-12 bg-primary flex items-center justify-center font-bold text-white text-sm shadow-lg transition-transform group-hover:scale-105">
-              HPP
+            <div className="relative flex items-center transition-transform group-hover:scale-105">
+              <img 
+                src="/logo.png" 
+                alt="Harari Prison Police Commission Logo" 
+                className="h-10 md:h-14 lg:h-16 w-auto object-contain transition-all duration-300"
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-display font-bold text-base tracking-tight leading-none text-primary">

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import RichTextEditor from "./RichTextEditor";
+import ImageUploader from "./ImageUploader";
 import { 
   Globe, 
   Settings, 
@@ -34,7 +35,7 @@ type Translation = {
 type ArticleData = {
   id: string;
   slug: string;
-  imageUrl: string | null;
+  images: string[];
   isPublished: boolean;
   translations: { language: string; title: string; summary: string; content: string }[];
 };
@@ -45,7 +46,7 @@ export default function ArticleForm({ article }: Props) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<Language>("en");
   const [slug, setSlug] = useState(article?.slug ?? "");
-  const [imageUrl, setImageUrl] = useState(article?.imageUrl ?? "");
+  const [images, setImages] = useState<string[]>(article?.images ?? []);
   const [isPublished, setIsPublished] = useState(article?.isPublished ?? false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -70,11 +71,30 @@ export default function ArticleForm({ article }: Props) {
     }
   );
 
+  function slugify(text: string) {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")     // Replace spaces with -
+      .replace(/[^\w-]+/g, "")    // Remove all non-word chars
+      .replace(/--+/g, "-");    // Replace multiple - with single -
+  }
+
   function updateTranslation(lang: Language, field: keyof Omit<Translation, "language">, value: string) {
-    setTranslations((prev) => ({
-      ...prev,
-      [lang]: { ...prev[lang], [field]: value },
-    }));
+    setTranslations((prev) => {
+      const next = {
+        ...prev,
+        [lang]: { ...prev[lang], [field]: value },
+      };
+      
+      // Auto-generate slug from English title if slug is empty or was auto-generated
+      if (lang === "en" && field === "title" && (!slug || slug === slugify(prev.en.title))) {
+        setSlug(slugify(value));
+      }
+      
+      return next;
+    });
   }
 
   async function handleSave(publish: boolean) {
@@ -83,7 +103,7 @@ export default function ArticleForm({ article }: Props) {
 
     const payload = {
       slug,
-      imageUrl,
+      images,
       isPublished: publish,
       translations: Object.values(translations),
     };
@@ -100,7 +120,8 @@ export default function ArticleForm({ article }: Props) {
     setSaving(false);
 
     if (!res.ok) {
-      setError("Failed to save article. Please try again.");
+      const data = await res.json();
+      setError(data.error || "Failed to save article. Please try again.");
       return;
     }
 
@@ -207,19 +228,12 @@ export default function ArticleForm({ article }: Props) {
               />
             </div>
 
-            {/* Image URL */}
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60 flex items-center gap-2">
-                <ImageIcon className="w-3 h-3" />
-                Cover Image URL
-              </label>
-              <input
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://..."
-                className="w-full bg-surface-container-low border border-outline-variant/30 px-4 py-3 text-xs font-medium text-primary focus:outline-none focus:ring-1 focus:ring-accent focus:bg-white transition-all"
-              />
-            </div>
+            {/* Gallery Upload */}
+            <ImageUploader 
+              value={images} 
+              onChange={setImages} 
+              label="Article Gallery" 
+            />
 
             {/* Status Information */}
             <div className="bg-surface-container-low p-6 border-l-4 border-accent space-y-4">

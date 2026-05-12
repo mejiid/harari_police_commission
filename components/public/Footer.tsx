@@ -15,8 +15,8 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 bg-white/10 flex items-center justify-center font-bold text-white text-sm border border-white/20">
-                HPP
+              <div className="flex items-center">
+                <img src="/logo.png" alt="Harari Police Logo" className="h-12 md:h-16 w-auto object-contain" />
               </div>
               <div className="flex flex-col">
                 <span className="font-display font-bold text-lg tracking-tight leading-none">

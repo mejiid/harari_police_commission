@@ -15,7 +15,10 @@
   },
   "news": {
     "title": "Oduu",
-    "read_more": "Dabalata Dubbisi"
+    "featured": "Featured",
+    "latest_updates": "Latest Updates",
+    "read_more": "Read More",
+    "published_on": "Published on"
   },
   "reports": {
     "title": "Gabaasa",

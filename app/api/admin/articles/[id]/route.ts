@@ -14,37 +14,50 @@ export async function PUT(req: NextRequest, { params }: Params) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
-  const { slug, imageUrl, isPublished, translations } = await req.json();
+  let { slug, images, isPublished, translations } = await req.json();
+
+  // Clean slug
+  slug = slug
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]+/g, "")
+    .replace(/--+/g, "-");
 
   const existing = await db.article.findUnique({ where: { id } });
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  // Editors cannot publish
-  if (isPublished && session.user.role === "EDITOR") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
-
-  const article = await db.article.update({
-    where: { id },
-    data: {
-      slug,
-      imageUrl: imageUrl || null,
-      isPublished,
-      publishedAt: isPublished && !existing.isPublished ? new Date() : existing.publishedAt,
-      translations: {
-        deleteMany: {},
-        create: translations.map((t: { language: string; title: string; summary: string; content: string }) => ({
-          language: t.language,
-          title: t.title,
-          summary: t.summary,
-          content: t.content,
-        })),
+  // Update article
+  try {
+    const article = await db.article.update({
+      where: { id },
+      data: {
+        slug,
+        images: images || [],
+        isPublished,
+        publishedAt: isPublished && !existing.isPublished ? new Date() : existing.publishedAt,
+        translations: {
+          deleteMany: {},
+          create: translations
+            .filter((t: any) => t.title.trim() !== "") // Only save non-empty translations
+            .map((t: { language: string; title: string; summary: string; content: string }) => ({
+              language: t.language,
+              title: t.title,
+              summary: t.summary,
+              content: t.content,
+            })),
+        },
       },
-    },
-  });
-
-  return NextResponse.json(article);
+    });
+    return NextResponse.json(article);
+  } catch (error: any) {
+    if (error.code === 'P2002') {
+      return NextResponse.json({ error: "Another article is already using this URL slug." }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Database error occurred while saving." }, { status: 500 });
+  }
 }
+
 
 export async function DELETE(_req: NextRequest, { params }: Params) {
   const session = await getSession();

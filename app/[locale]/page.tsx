@@ -18,7 +18,7 @@ async function getLatestArticles(locale: string) {
   return db.article.findMany({
     where: { isPublished: true },
     include: {
-      translations: { where: { language: locale as "en" | "am" | "har" | "orm" } },
+      translations: true,
     },
     orderBy: { publishedAt: "desc" },
     take: 3,
@@ -29,7 +29,7 @@ async function getLatestReports(locale: string) {
   return db.report.findMany({
     where: { isPublished: true },
     include: {
-      translations: { where: { language: locale as "en" | "am" | "har" | "orm" } },
+      translations: true,
     },
     orderBy: { publishedAt: "desc" },
     take: 3,
@@ -80,24 +80,23 @@ function HeroSection({ locale }: { locale: string }) {
             Official Portal
           </div>
           <h1 className="display-lg text-white mb-8 animate-in fade-in slide-in-from-bottom duration-700 delay-100 leading-[1.1]">
-            Upholding Justice.<br />Securing Our Community.
+            {t("hero_title")}
           </h1>
           <p className="text-xl text-white/70 max-w-2xl mb-12 leading-relaxed animate-in fade-in slide-in-from-bottom duration-700 delay-200">
-            Providing transparent access to institutional updates, reports, and public services 
-            for the people of the Harari Region.
+            {t("hero_subtitle")}
           </p>
           <div className="flex flex-wrap gap-6 animate-in fade-in slide-in-from-bottom duration-700 delay-300">
             <Link
               href={`/${locale}/news`}
               className="bg-accent text-white font-bold px-10 py-5 text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl"
             >
-              Latest Updates
+              {t("latest_updates")}
             </Link>
             <Link
               href={`/${locale}/contact`}
               className="bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold px-10 py-5 text-xs uppercase tracking-widest hover:bg-white/20 transition-all"
             >
-              Contact Commission
+              {t("contact_commission")}
             </Link>
           </div>
         </div>
@@ -107,11 +106,12 @@ function HeroSection({ locale }: { locale: string }) {
 }
 
 function QuickAccessSection({ locale }: { locale: string }) {
+  const t = useTranslations("home.services");
   const services = [
-    { title: "Family Visitation", desc: "Schedule and manage inmate visits online.", icon: "👥" },
-    { title: "Legal Representation", desc: "Resources and portals for legal professionals.", icon: "⚖️" },
-    { title: "Inmate Locator", desc: "Search for inmates within the commission system.", icon: "🔍" },
-    { title: "Career Opportunities", desc: "Join the Harari Prison Police Commission.", icon: "🛡️" },
+    { title: t("visitation"), desc: t("visitation_desc"), icon: "👥" },
+    { title: t("legal"), desc: t("legal_desc"), icon: "⚖️" },
+    { title: t("locator"), desc: t("locator_desc"), icon: "🔍" },
+    { title: t("careers"), desc: t("careers_desc"), icon: "🛡️" },
   ];
 
   return (
@@ -136,11 +136,12 @@ function QuickAccessSection({ locale }: { locale: string }) {
 }
 
 function StatisticsSection() {
+  const t = useTranslations("home.stats");
   const stats = [
-    { label: "Commission Staff", value: "1,200+" },
-    { label: "Rehabilitation Rate", value: "84%" },
-    { label: "Facility Capacity", value: "100%" },
-    { label: "Years of Service", value: "25+" },
+    { label: t("staff"), value: "1,200+" },
+    { label: t("rehab"), value: "84%" },
+    { label: t("capacity"), value: "100%" },
+    { label: t("service"), value: "25+" },
   ];
 
   return (
@@ -163,6 +164,7 @@ function StatisticsSection() {
 }
 
 function MissionSection() {
+  const t = useTranslations("home.mission");
   return (
     <section className="py-32 px-4 bg-white">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
@@ -176,25 +178,21 @@ function MissionSection() {
         </div>
         <div className="space-y-8">
           <h2 className="headline-md text-primary leading-tight">
-            Our Commitment to the <span className="text-accent">Rule of Law</span> and Human Dignity.
+            {t("title")}
           </h2>
           <div className="space-y-6 text-on-surface-variant leading-relaxed">
             <p>
-              The Harari Prison Police Commission operates on the foundational principles of 
-              integrity, security, and rehabilitation. Our mission is to protect the public 
-              while ensuring that those in our care are treated with the dignity required 
-              by international standards.
+              {t("p1")}
             </p>
             <p className="font-bold text-primary italic border-l-4 border-accent pl-6">
-              "We believe that true security comes from a balance of firm discipline 
-              and transformative rehabilitation programs."
+              "{t("quote")}"
             </p>
           </div>
           <div className="pt-8 flex items-center gap-6">
             <div className="w-16 h-16 bg-primary-container rounded-full" />
             <div>
-              <div className="font-display font-bold text-primary">Official Commissioner</div>
-              <div className="text-xs uppercase tracking-widest text-on-surface-variant">HPPC Leadership</div>
+              <div className="font-display font-bold text-primary">{t("leadership")}</div>
+              <div className="text-xs uppercase tracking-widest text-on-surface-variant">{t("leadership_sub")}</div>
             </div>
           </div>
         </div>
@@ -235,14 +233,17 @@ function NewsSection({
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {articles.map((article) => {
-              const translation = article.translations[0];
+              const translation = 
+                article.translations.find(t => t.language === locale) ||
+                (locale === "har" ? article.translations.find(t => t.language === "am") : null) ||
+                article.translations[0];
               if (!translation) return null;
               return (
                 <article key={article.id} className="group cursor-pointer">
                   <div className="relative overflow-hidden mb-6 aspect-[16/10]">
-                    {article.imageUrl ? (
+                    {article.images?.[0] ? (
                       <img 
-                        src={article.imageUrl} 
+                        src={article.images[0]} 
                         alt={translation.title} 
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                       />
@@ -312,7 +313,10 @@ function ReportsSection({
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {reports.map((report) => {
-              const translation = report.translations[0];
+              const translation = 
+                report.translations.find(t => t.language === locale) ||
+                (locale === "har" ? report.translations.find(t => t.language === "am") : null) ||
+                report.translations[0];
               if (!translation) return null;
               return (
                 <div key={report.id} className="bg-white p-8 shadow-sm hover:shadow-xl transition-all border-l-4 border-primary group">

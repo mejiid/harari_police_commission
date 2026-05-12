@@ -7,15 +7,43 @@
     "contact": "Contact"
   },
   "home": {
-    "hero_title": "Prison Police Commission",
-    "hero_subtitle": "Transparency, Accountability, and Justice",
+    "hero_title": "Upholding Justice. Securing Our Community.",
+    "hero_subtitle": "Providing transparent access to institutional updates, reports, and public services for the people of the Harari Region.",
+    "latest_updates": "Latest Updates",
+    "contact_commission": "Contact Commission",
     "latest_news": "Latest News",
     "latest_reports": "Latest Reports",
-    "view_all": "View All"
+    "view_all": "View All",
+    "services": {
+      "visitation": "Family Visitation",
+      "visitation_desc": "Schedule and manage inmate visits online.",
+      "legal": "Legal Representation",
+      "legal_desc": "Resources and portals for legal professionals.",
+      "locator": "Inmate Locator",
+      "locator_desc": "Search for inmates within the commission system.",
+      "careers": "Career Opportunities",
+      "careers_desc": "Join the Harari Prison Police Commission."
+    },
+    "stats": {
+      "staff": "Commission Staff",
+      "rehab": "Rehabilitation Rate",
+      "capacity": "Facility Capacity",
+      "service": "Years of Service"
+    },
+    "mission": {
+      "title": "Our Commitment to the Rule of Law and Human Dignity.",
+      "p1": "The Harari Prison Police Commission operates on the foundational principles of integrity, security, and rehabilitation. Our mission is to protect the public while ensuring that those in our care are treated with the dignity required by international standards.",
+      "quote": "We believe that true security comes from a balance of firm discipline and transformative rehabilitation programs.",
+      "leadership": "Official Commissioner",
+      "leadership_sub": "HPPC Leadership"
+    }
   },
   "news": {
-    "title": "News",
-    "read_more": "Read More"
+    "title": "News Repository",
+    "featured": "Featured Publication",
+    "latest_updates": "Latest Archive Updates",
+    "read_more": "Examine Full Report",
+    "published_on": "Authenticated on"
   },
   "reports": {
     "title": "Reports",

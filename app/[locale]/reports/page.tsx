@@ -24,7 +24,7 @@ async function getReports(locale: string, page: number) {
     db.report.findMany({
       where: { isPublished: true },
       include: {
-        translations: { where: { language: locale as "en" | "am" | "har" | "orm" } },
+        translations: true,
       },
       orderBy: { publishedAt: "desc" },
       skip,
@@ -86,7 +86,10 @@ function ReportsList({
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
               {reports.map((report) => {
-                const translation = report.translations[0];
+                const translation = 
+                  report.translations.find(t => t.language === locale) ||
+                  (locale === "har" ? report.translations.find(t => t.language === "am") : null) ||
+                  report.translations[0];
                 if (!translation) return null;
                 return (
                   <div
