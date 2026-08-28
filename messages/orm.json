@@ -7,18 +7,43 @@
     "contact": "Nu Quunnamaa"
   },
   "home": {
-    "hero_title": "Komishinii Poolisii Mana Hidhaa",
-    "hero_subtitle": "Iftoominaa, Itti Gaafatamummaa fi Haqummaa",
+    "hero_title": "Haqaa Eeguu. Hawaasaa Keenya Eeguu.",
+    "hero_subtitle": "Gara jidhaadha itti gaafatammaatti odeeffannoo, gabaasaa fi tajaajiila hawaasaa argachuu kennu.",
+    "latest_updates": "Odeeffannoo Haaraa",
+    "contact_commission": "Komishinii Quunnamaa",
     "latest_news": "Oduu Haaraa",
     "latest_reports": "Gabaasa Haaraa",
-    "view_all": "Hunda Ilaali"
+    "view_all": "Hunda Ilaali",
+    "services": {
+      "visitation": "Bi'iluu Maatii",
+      "visitation_desc": "Bi'iluu hidhattootaa intarnettin qindeessaa fi bulchisuun.",
+      "legal": "Waaqalii Seera",
+      "legal_desc": "Miidiyaa fi karaa seera olaantotaaf.",
+      "locator": "Hidhattoo Barbaadu",
+      "locator_desc": "Hidhattoo sirna komishinichaa keessaa barbaadi.",
+      "careers": "Carraan Hojii",
+      "careers_desc": "Komishinii Poolisii Mana Hidhaa Harareettitti gali."
+    },
+    "stats": {
+      "staff": "Hojjettoota Komishinii",
+      "rehab": "Baay'ina Deebii Jiiddhaa",
+      "capacity": "Humna Caasaa",
+      "service": "Waggaa Tajaajiilaa"
+    },
+    "mission": {
+      "title": "Maricha Haqaa fi Ulfinni Nama Hundaaf.",
+      "p1": "Komishinii Poolisii Mana Hidhaa Harareetti miidiyaa, nageenya fi deebii jiiddhaa irratti hundaa'a. Waan nu eegnu guyya hunda ulfinni nama jedhuuf hojjechuu fi itti gaafatamummaa barataa godan jidhaa eeguu dha.",
+      "quote": "Nageenya dhugaa fedhiin ajaja fi karaa jiidhaa deebii jiiddhaa gidduutti silaa argamuu nu amana.",
+      "leadership": "Mootummaa Komishinii",
+      "leadership_sub": "Falmii Komishinii"
+    }
   },
   "news": {
     "title": "Oduu",
-    "featured": "Featured",
-    "latest_updates": "Latest Updates",
-    "read_more": "Read More",
-    "published_on": "Published on"
+    "featured": "Oduu Xuurame",
+    "latest_updates": "Odeeffannoo Haaraa",
+    "read_more": "Guutummaa Dubbisi",
+    "published_on": "Yeroo Baasame"
   },
   "reports": {
     "title": "Gabaasa",
